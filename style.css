@@ -1,0 +1,206 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tajawal', sans-serif;
+}
+
+body {
+    background-color: #fff0f5;
+    color: #4a4a4a;
+    line-height: 1.6;
+}
+
+/* نافذة تسجيل الدخول (نفس القديمة) */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(255, 192, 203, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal-content h2 { color: #ff69b4; margin-bottom: 10px; }
+.modal-content p { margin-bottom: 20px; color: #777; }
+
+.modal-content input, .modal-content select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ffb6c1;
+    border-radius: 10px;
+    font-size: 1em;
+    outline: none;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* القائمة العلوية */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+}
+
+.logo-container { display: flex; align-items: center; gap: 15px; }
+.uni-logo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ff69b4; }
+.platform-name { font-weight: bold; color: #ff69b4; font-size: 1.2em; }
+
+.search-box input {
+    padding: 8px 15px;
+    border: 2px solid #ffb6c1;
+    border-radius: 20px;
+    outline: none;
+}
+
+/* القسم الرئيسي */
+.hero-section {
+    text-align: center;
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+}
+
+.animate-title {
+    font-size: 2.5em;
+    color: #ff1493;
+    margin-bottom: 10px;
+}
+
+.research-title {
+    font-size: 1.1em;
+    color: #777;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.welcome-msg { font-size: 1.2em; color: #ff69b4; font-weight: bold; }
+
+/* شبكة الوحدات */
+.units-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 50px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.unit-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(255, 182, 193, 0.2);
+    transition: transform 0.3s ease;
+    border: 1px solid #ffe4e1;
+}
+
+.unit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 105, 180, 0.2);
+}
+
+.card-icon { font-size: 3em; margin-bottom: 15px; }
+.unit-card h3 { color: #ff69b4; margin-bottom: 10px; }
+.unit-card p { color: #888; font-size: 0.95em; margin-bottom: 20px; }
+
+.start-btn {
+    padding: 10px 25px;
+    background-color: #ffe4e1;
+    color: #ff1493;
+    border: 2px solid #ff69b4;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.start-btn:hover { background-color: #ff69b4; color: white; }
+
+/* 🎥 تنسيق النافذة المنبثقة للفيديو */
+.video-popup {
+    display: none; /* مخفية بالبداية */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    width: 90%;
+    max-width: 900px;
+    padding: 20px;
+    border-radius: 20px;
+    position: relative;
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px; right: 20px;
+    font-size: 2em;
+    color: #ff69b4;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* نسبة 16:9 */
+    height: 0;
+    margin-top: 20px;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 10px;
+}
+
+.quiz-placeholder {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fff0f5;
+    border-radius: 10px;
+    color: #ff69b4;
+}
+
+/* الفوتر */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #ff69b4;
+    color: white;
+    margin-top: 40px;
+}
