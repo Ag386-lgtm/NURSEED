@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMOS - NURSEED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- القائمة العلوية -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <a href="index.html" class="back-home">الرئيسية</a>
+            <span class="platform-name">NURSEED</span>
+        </div>
+        <div class="user-info" id="userGreeting"></div>
+    </nav>
+
+    <!-- قسم تكيس المبايض -->
+    <section class="topic-header">
+        <h2>متلازمة تكيس المبايض (PMOS)</h2>
+        <p>أكملي الوحدات بالترتيب لإنهاء المسار التعليمي</p>
+        
+        <!-- شريط التقدم -->
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>تقدمك التعليمي</span>
+                <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-status" id="progressStatus">أكملي 0 من 6 وحدات</p>
+        </div>
+    </section>
+
+    <!-- شبكة الوحدات -->
+    <main class="units-grid">
+        <!-- الوحدة 1 -->
+        <div class="unit-card" id="unit-1">
+            <div class="card-icon">📖</div>
+            <h3>المعرفة العامة</h3>
+            <p>المعرفة العامة حول متلازمة تكيس المبايض</p>
+            <!-- رابط يوتيوب 1 -->
+            <button class="start-btn" onclick="startUnit(1, 'https://www.youtube.com/embed/0rlto-F0NdI')">ابدأ التعلم</button>
+        </div>
+        <!-- الوحدة 2 -->
+        <div class="unit-card" id="unit-2">
+            <div class="card-icon">🔍</div>
+            <h3>العلامات والأعراض</h3>
+            <p>التعرف على العلامات والأعراض</p>
+            <!-- رابط يوتيوب 2 -->
+            <button class="start-btn" onclick="startUnit(2, 'https://www.youtube.com/embed/J1HizKD-MN8')">ابدأ التعلم</button>
+        </div>
+        <!-- الوحدة 3 -->
+        <div class="unit-card" id="unit-3">
+            <div class="card-icon">🩺</div>
+            <h3>التشخيص والفحوصات</h3>
+            <p>التشخيص والفحوصات الطبية</p>
+            <!-- رابط يوتيوب 3 -->
+            <button class="start-btn" onclick="startUnit(3, 'https://www.youtube.com/embed/9HWzoFWjMFk')">ابدأ التعلم</button>
+        </div>
+        <!-- الوحدة 4 -->
+        <div class="unit-card" id="unit-4">
+            <div class="card-icon">💊</div>
+            <h3>الرعاية والعلاج</h3>
+            <p>الرعاية والعلاج المتاح</p>
+            <!-- رابط يوتيوب 4 -->
+            <button class="start-btn" onclick="startUnit(4, 'https://www.youtube.com/embed/slI_o2kv-IU')">ابدأ التعلم</button>
+        </div>
+        <!-- الوحدة 5 -->
+        <div class="unit-card" id="unit-5">
+            <div class="card-icon">⚖️</div>
+            <h3>التأثيرات الهرمونية</h3>
+            <p>التأثيرات الهرمونية للمتلازمة</p>
+            <!-- رابط يوتيوب 5 -->
+            <button class="start-btn" onclick="startUnit(5, 'https://www.youtube.com/embed/6w0TsarkfkY')">ابدأ التعلم</button>
+        </div>
+        <!-- الوحدة 6 -->
+        <div class="unit-card" id="unit-6">
+            <div class="card-icon">🧪</div>
+            <h3>التأثيرات الأيضية</h3>
+            <p>المعرفة بالتأثيرات الأيضية</p>
+            <!-- رابط يوتيوب 6 -->
+            <button class="start-btn" onclick="startUnit(6, 'https://www.youtube.com/embed/Wp2CiybENRo')">ابدأ التعلم</button>
+        </div>
+    </main>
+
+    <!-- 🌟 نافذة الفيديو (تطلع أول شي) -->
+    <div id="videoPopup" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closePopup('videoPopup')">&times;</span>
+            <h3 id="videoTitle">عنوان الوحدة</h3>
+            <div class="video-wrapper">
+                <iframe id="videoFrame" src="" allowfullscreen></iframe>
+            </div>
+            <button class="main-btn" onclick="showQuiz()">لقد شاهدت الفيديو، انتقل للأسئلة</button>
+        </div>
+    </div>
+
+    <!-- 📝 نافذة الأسئلة -->
+    <div id="quizPopup" class="modal-overlay">
+        <div class="modal-box quiz-box">
+            <span class="close-btn" onclick="closePopup('quizPopup')">&times;</span>
+            <h3>اختبر معرفتك</h3>
+            <div id="quizContent">
+                <!-- الأسئلة راح تظهر هنا ديناميكياً -->
+            </div>
+            <button class="main-btn" id="submitQuizBtn" onclick="submitQuiz()">إرسال الإجابات</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
