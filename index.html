@@ -3,121 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة التوعية الصحية الرقمية - PMOS</title>
+    <title>NURSEED | منصة التوعية الصحية</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="landing-body">
 
-    <!-- 🔴 1. نافذة تسجيل الدخول -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h2>أهلاً بك في منصة التوعية الصحية</h2>
-            <p>يرجى إدخال اسمك واختيار صفتك للبدء</p>
-            <input type="text" id="studentName" placeholder="اكتب اسمك الكريم هنا..." required>
-            <select id="userRole">
-                <option value="طالبة">طالبة</option>
-                <option value="طبيب/ة">طبيب/ة</option>
-                <option value="ممرض/ة">ممرض/ة</option>
-                <option value="زائر/ة">زائر/ة</option>
-            </select>
-            <button onclick="loginUser()">دخول للمنصة</button>
+    <div class="landing-container">
+        <div class="logo-area">
+            <!-- هنا تحطين شعار المنصة أو الكلية -->
+            <img src="logo.png" alt="شعار المنصة" class="landing-logo" onerror="this.style.display='none'">
+            <h1 class="landing-title">NURSEED</h1>
+            <p class="landing-subtitle">منصة التوعية الصحية الرقمية</p>
         </div>
-    </div>
+        
+        <div class="landing-content">
+            <h2>مرحباً بك في رحلتك التعليمية</h2>
+            <p>منصة متخصصة في التوعية الصحية للمرأة. يرجى إدخال اسمك واختيار صفتك للبدء.</p>
+            
+            <!-- فورم التسجيل -->
+            <div class="login-form">
+                <input type="text" id="userNameInput" placeholder="اكتب اسمك الكريم هنا..." required>
+                
+                <select id="userRoleInput">
+                    <option value="طالب/طالبة">طالب / طالبة</option>
+                    <option value="طبيب/طبيبة">طبيب / طبيبة</option>
+                    <option value="ممرض/ممرضة">ممرض / ممرضة</option>
+                    <option value="تدريسي/تدريسية">تدريسي / تدريسية</option>
+                    <option value="مهندس/مهندسة">مهندس / مهندسة</option>
+                    <option value="زائر/زائرة">زائر / زائرة</option>
+                </select>
 
-    <!-- 🟣 2. القائمة العلوية -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <!-- 🔴 هنا تحطين شعار الجامعة (غيري logo.png بصورة شعارج) -->
-            <img src="logo.png" alt="شعار الجامعة" class="uni-logo">
-            <span class="platform-name">منصة التوعية الصحية الرقمية</span>
-        </div>
-        <div class="search-box">
-            <input type="text" placeholder="ابحث عن وحدة...">
-        </div>
-    </nav>
-
-    <!-- 🌸 3. القسم الرئيسي -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1 class="animate-title">منصة PMOS التعليمية</h1>
-            <h2 class="research-title">عنوان البحث: Effectiveness of the NURSEED Digital Health Awareness Platform...</h2>
-            <p class="welcome-msg" id="welcomeMessage">أهلاً بكِ، يرجى اختيار الوحدة العلمية للبدء</p>
-        </div>
-    </header>
-
-    <!-- 📚 4. شبكة الوحدات (البطاقات) -->
-    <main class="units-grid">
-        <!-- الوحدة الأولى -->
-        <div class="unit-card">
-            <div class="card-icon">📖</div>
-            <h3>1. المعرفة العامة</h3>
-            <p>المعرفة العامة حول متلازمة تكيس المبايض</p>
-            <!-- 🔴 هنا تحطين رابط الفيديو (رابط التضمين) -->
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_1')">ابدأ الوحدة</button>
-        </div>
-
-        <!-- الوحدة الثانية -->
-        <div class="unit-card">
-            <div class="card-icon">🔍</div>
-            <h3>2. العلامات والأعراض</h3>
-            <p>التعرف على العلامات والأعراض</p>
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_2')">ابدأ الوحدة</button>
-        </div>
-
-        <!-- الوحدة الثالثة -->
-        <div class="unit-card">
-            <div class="card-icon">🩺</div>
-            <h3>3. التشخيص والفحوصات</h3>
-            <p>التشخيص والفحوصات الطبية</p>
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_3')">ابدأ الوحدة</button>
-        </div>
-
-        <!-- الوحدة الرابعة -->
-        <div class="unit-card">
-            <div class="card-icon">💊</div>
-            <h3>4. الرعاية والعلاج</h3>
-            <p>الرعاية والعلاج المتاح</p>
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_4')">ابدأ الوحدة</button>
-        </div>
-
-        <!-- الوحدة الخامسة -->
-        <div class="unit-card">
-            <div class="card-icon">⚖️</div>
-            <h3>5. التأثيرات الهرمونية</h3>
-            <p>التأثيرات الهرمونية للمتلازمة</p>
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_5')">ابدأ الوحدة</button>
-        </div>
-
-        <!-- الوحدة السادسة -->
-        <div class="unit-card">
-            <div class="card-icon">🧪</div>
-            <h3>6. التأثيرات الأيضية</h3>
-            <p>المعرفة بالتأثيرات الأيضية</p>
-            <button class="start-btn" onclick="openVideo('https://www.youtube.com/embed/VIDEO_ID_6')">ابدأ الوحدة</button>
-        </div>
-    </main>
-
-    <!-- 🎥 5. النافذة المنبثقة للفيديو -->
-    <div id="videoPopup" class="video-popup">
-        <div class="popup-content">
-            <span class="close-btn" onclick="closeVideo()">&times;</span>
-            <h2 id="popupTitle">عنوان الوحدة</h2>
-            <div class="video-wrapper">
-                <!-- هنا راح يشتغل الفيديو -->
-                <iframe id="videoFrame" src="" allowfullscreen></iframe>
-            </div>
-            <div class="quiz-placeholder">
-                <p>الأسئلة راح تظهر هنا بعد مشاهدة الفيديو (قريباً)</p>
+                <button class="main-btn" onclick="saveUserAndEnter()">الدخول إلى قسم تكيس المبايض</button>
             </div>
         </div>
     </div>
 
-    <!-- ⚫ 6. الفوتر -->
-    <footer>
-        <p>جميع الحقوق محفوظة &copy; 2026 | منصة PMOS البحثية</p>
-    </footer>
+    <script>
+        function saveUserAndEnter() {
+            const name = document.getElementById('userNameInput').value;
+            const role = document.getElementById('userRoleInput').value;
 
-    <script src="script.js"></script>
+            if (name.trim() === "") {
+                alert("الرجاء إدخال اسمك أولاً!");
+                return;
+            }
+
+            // حفظ الاسم والصفة في ذاكرة المتصفح
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userRole', role);
+
+            // الانتقال لصفحة الوحدات
+            window.location.href = "pmos.html";
+        }
+    </script>
 </body>
 </html>
