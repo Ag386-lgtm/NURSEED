@@ -3,56 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NURSEED | تسجيل الدخول</title>
+    <title>NURSEED | منصة التوعية الصحية</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body class="landing-body">
+<body>
 
-    <div class="landing-container">
-        <div class="logo-area">
-            <img src="logo.png" alt="شعار المنصة" class="landing-logo" onerror="this.style.display='none'">
-            <h1 class="landing-title">NURSEED</h1>
-            <p class="landing-subtitle">منصة التوعية الصحية الرقمية</p>
+    <!-- القائمة العلوية -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <span class="platform-name">NURSEED</span>
         </div>
-        
-        <div class="landing-content">
-            <h2>مرحباً بك في رحلتك التعليمية</h2>
-            <p>يرجى إدخال اسمك واختيار صفتك للبدء</p>
-            
-            <div class="login-form">
-                <input type="text" id="userNameInput" placeholder="اكتب اسمك الكريم هنا..." required>
-                
-                <select id="userRoleInput">
-                    <option value="طالب/طالبة">طالب / طالبة</option>
-                    <option value="طبيب/طبيبة">طبيب / طبيبة</option>
-                    <option value="ممرض/ممرضة">ممرض / ممرضة</option>
-                    <option value="تدريسي/تدريسية">تدريسي / تدريسية</option>
-                    <option value="مهندس/مهندسة">مهندس / مهندسة</option>
-                    <option value="زائر/زائرة">زائر / زائرة</option>
-                </select>
+        <div class="user-info" id="userGreeting">منصة التوعية الصحية</div>
+    </nav>
 
-                <button class="main-btn" onclick="saveUserAndEnter()">دخول للمنصة</button>
+    <!-- الترحيب والتعريف -->
+    <header class="hero-section">
+        <h1>مرحباً بك في منصة NURSEED</h1>
+        <p class="hero-desc">
+            منصة علمية تهدف إلى نشر التوعية الصحية للمرأة من خلال فيديوهات تعليمية وأسئلة تقييمية. 
+            نهدف إلى توفير محتوى موثوق ومبسط يساعدك على فهم صحتك بشكل أفضل.
+        </p>
+    </header>
+
+    <!-- الأقسام -->
+    <section class="sections-container">
+        <h2 class="section-title">الأقسام العلمية</h2>
+        
+        <div class="units-grid">
+            <!-- القسم الفعال (تكيس المبايض) -->
+            <a href="pmos.html" class="unit-card active-card">
+                <div class="card-icon">🩺</div>
+                <h3>متلازمة تكيس المبايض (PMOS)</h3>
+                <p>تعرفي على الأعراض، التشخيص، والعلاج من خلال 6 وحدات تفاعلية.</p>
+                <span class="start-btn">ابدأ التعلم</span>
+            </a>
+
+            <!-- أقسام فارغة (قريباً) -->
+            <div class="unit-card disabled-card">
+                <div class="card-icon">🔬</div>
+                <h3>بطانة الرحم المهاجرة</h3>
+                <p>قريباً...</p>
+                <span class="start-btn disabled">قريباً</span>
+            </div>
+
+            <div class="unit-card disabled-card">
+                <div class="card-icon">🧬</div>
+                <h3>أمراض الغدة الدرقية</h3>
+                <p>قريباً...</p>
+                <span class="start-btn disabled">قريباً</span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script>
-        function saveUserAndEnter() {
-            const name = document.getElementById('userNameInput').value;
-            const role = document.getElementById('userRoleInput').value;
-
-            if (name.trim() === "") {
-                alert("الرجاء إدخال اسمك أولاً!");
-                return;
-            }
-
-            localStorage.setItem('userName', name);
-            localStorage.setItem('userRole', role);
-
-            // ينتقل للصفحة التعريفية
-            window.location.href = "welcome.html";
-        }
-    </script>
 </body>
 </html>
