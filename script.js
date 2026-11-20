@@ -1,4 +1,4 @@
-here// --- 1. بيانات الأسئلة (مأخوذة من الأسئلة اللي أرسلتيها) ---
+// --- 1. بيانات الأسئلة ---
 const quizData = {
     1: [
         { q: "ما المقصود بمتلازمة تكيس المبايض؟", options: ["حالة صحية ترتبط باضطراب الهرمونات وقد تؤثر في الدورة الشهرية وصحة الجسم", "مرض ينتقل من امرأة إلى أخرى", "مرض يصيب النساء الحوامل فقط", "لا أعرف"], correct: 0 },
@@ -43,6 +43,7 @@ function updateProgress() {
     // تحديث شكل البطاقات
     for(let i=1; i<=6; i++) {
         const card = document.getElementById(`unit-${i}`);
+        if(!card) continue; // حماية إذا كان العنصر غير موجود
         const btn = card.querySelector('.start-btn');
         if(completed.includes(i)) {
             card.classList.add('completed');
@@ -57,9 +58,13 @@ function updateProgress() {
 
     // تحديث شريط التقدم
     const percent = Math.round((completed.length / 6) * 100);
-    document.getElementById('progressText').innerText = percent + "%";
-    document.getElementById('progressFill').style.width = percent + "%";
-    document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
+    const progText = document.getElementById('progressText');
+    const progFill = document.getElementById('progressFill');
+    const progStatus = document.getElementById('progressStatus');
+    
+    if(progText) progText.innerText = percent + "%";
+    if(progFill) progFill.style.width = percent + "%";
+    if(progStatus) progStatus.innerText = `أكملي ${completed.length} من 6 وحدات`;
 }
 
 // --- 3. تشغيل الفيديو ---
@@ -67,7 +72,6 @@ function startUnit(unitId, videoUrl) {
     currentUnit = unitId;
     currentVideoUrl = videoUrl;
     
-    // تحديد عنوان الفيديو
     const titles = {
         1: "الوحدة الأولى: المعرفة العامة", 2: "الوحدة الثانية: العلامات والأعراض",
         3: "الوحدة الثالثة: التشخيص والفحوصات", 4: "الوحدة الرابعة: الرعاية والعلاج",
@@ -75,7 +79,6 @@ function startUnit(unitId, videoUrl) {
     };
     document.getElementById('videoTitle').innerText = titles[unitId];
     
-    // تشغيل الفيديو
     document.getElementById('videoFrame').src = videoUrl;
     document.getElementById('videoPopup').style.display = 'flex';
 }
@@ -86,7 +89,6 @@ function showQuiz() {
     
     const quizContent = document.getElementById('quizContent');
     quizContent.innerHTML = "";
-    
     const questions = quizData[currentUnit];
     
     questions.forEach((q, index) => {
@@ -126,9 +128,9 @@ function submitQuiz() {
         const selectedVal = parseInt(selected.value);
         const isCorrect = selectedVal === q.correct;
 
-        // إزالة التنسيقات القديمة
         q.options.forEach((_, optIndex) => {
-            document.getElementById(`opt-${index}-${optIndex}`).classList.remove('correct-answer', 'wrong-answer');
+            const optEl = document.getElementById(`opt-${index}-${optIndex}`);
+            if(optEl) optEl.classList.remove('correct-answer', 'wrong-answer');
         });
 
         if (isCorrect) {
@@ -136,12 +138,13 @@ function submitQuiz() {
         } else {
             allCorrect = false;
             document.getElementById(`opt-${index}-${selectedVal}`).classList.add('wrong-answer');
-            // إظهار الإجابة الصحيحة
             document.getElementById(`opt-${index}-${q.correct}`).classList.add('correct-answer');
             
-            feedback.style.display = 'block';
-            feedback.className = 'feedback-msg feedback-correct';
-            feedback.innerText = "الإجابة الصحيحة هي: " + q.options[q.correct];
+            if(feedback) {
+                feedback.style.display = 'block';
+                feedback.className = 'feedback-msg feedback-correct';
+                feedback.innerText = "الإجابة الصحيحة هي: " + q.options[q.correct];
+            }
         }
     });
 
@@ -151,7 +154,6 @@ function submitQuiz() {
     }
 
     if (allCorrect) {
-        // حفظ الوحدة كمكتملة
         let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
         if (!completed.includes(currentUnit)) {
             completed.push(currentUnit);
@@ -162,7 +164,6 @@ function submitQuiz() {
         alert("🎉 أحسنت! لقد أجبت على جميع الأسئلة بشكل صحيح وتم إكمال هذه الوحدة.");
         closePopup('quizPopup');
     } else {
-        // إذا في خطأ، نخلي زر الإرسال يعيد المحاولة
         document.getElementById('submitQuizBtn').innerText = "حاول مرة أخرى";
         alert("⚠️ يوجد بعض الإجابات غير الصحيحة. راجع الإجابات المظللة وحاول مرة أخرى.");
     }
@@ -172,22 +173,26 @@ function submitQuiz() {
 function closePopup(id) {
     document.getElementById(id).style.display = 'none';
     if(id === 'videoPopup') {
-        document.getElementById('videoFrame').src = ""; // إيقاف الفيديو
+        document.getElementById('videoFrame').src = ""; 
     }
 }
 
-// --- 7. ترحيب المستخدم ---
+// --- 7. ترحيب المستخدم (عند تحميل الصفحة) ---
 window.onload = function() {
     const name = localStorage.getItem('userName');
     const role = localStorage.getItem('userRole');
     
-    if(name && role) {
-        // يظهر الترحيب بشكل احترافي
-        document.getElementById('userGreeting').innerText = `مرحباً، ${role} ${name}`;
-    } else {
-        // إذا دخل مباشرة لرابط الوحدات بدون تسجيل، نطلعه ونطلب منه يسجل
-        window.location.href = "index.html"; 
+    // تحديث الترحيب
+    const greetingEl = document.getElementById('userGreeting');
+    if(greetingEl && name && role) {
+        greetingEl.innerText = `مرحباً، ${role} ${name}`;
     }
     
+    // إذا كان في صفحة الوحدات وماكو اسم مسجل، نرجعه للتسجيل
+    if(!name && window.location.pathname.includes('pmos.html')) {
+        window.location.href = "index.html"; 
+    }
+
+    // تحديث شريط التقدم (إذا كان موجود بالصفحة)
     updateProgress();
 };
