@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرحباً | NURSEED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-body">
+    <div class="welcome-container">
+        <div class="welcome-icon">🩺</div>
+        <h1 id="welcomeName">مرحباً بك!</h1>
+        <h2>منصة <span style="color: var(--primary); font-weight: 800;">NURSEED</span> للتوعية الصحية</h2>
+        <p class="welcome-desc">
+            هذه المنصة صُممت خصيصاً لتقديم محتوى تعليمي وتوعوي موثوق حول صحة المرأة. 
+            رحلتك ستبدأ بقسم <strong>متلازمة تكيس المبايض (PMOS)</strong>، حيث ستشاهد فيديوهات توضيحية قصيرة، وبعد كل فيديو ستجيب على أسئلة بسيطة لتقييم فهمك.
+        </p>
+        <div class="features">
+            <div class="feature-item">🎥 فيديوهات توضيحية</div>
+            <div class="feature-item">📝 أسئلة تقييمية</div>
+            <div class="feature-item">📊 متابعة تقدمك</div>
+        </div>
+        <a href="pmos.html" class="main-btn">ابدأ رحلة التعلم الآن</a>
+    </div>
+    <script>
+        const name = localStorage.getItem('userName');
+        if(name) document.getElementById('welcomeName').innerText = `أهلاً بك، ${name}`;
+    </script>
+</body>
+</html>
