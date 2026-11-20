@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NURSEED | منصة التوعية الصحية</title>
+    <title>NURSEED | تسجيل الدخول</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,6 @@
 
     <div class="landing-container">
         <div class="logo-area">
-            <!-- هنا تحطين شعار المنصة أو الكلية -->
             <img src="logo.png" alt="شعار المنصة" class="landing-logo" onerror="this.style.display='none'">
             <h1 class="landing-title">NURSEED</h1>
             <p class="landing-subtitle">منصة التوعية الصحية الرقمية</p>
@@ -19,9 +18,8 @@
         
         <div class="landing-content">
             <h2>مرحباً بك في رحلتك التعليمية</h2>
-            <p>منصة متخصصة في التوعية الصحية للمرأة. يرجى إدخال اسمك واختيار صفتك للبدء.</p>
+            <p>يرجى إدخال اسمك واختيار صفتك للبدء</p>
             
-            <!-- فورم التسجيل -->
             <div class="login-form">
                 <input type="text" id="userNameInput" placeholder="اكتب اسمك الكريم هنا..." required>
                 
@@ -34,7 +32,7 @@
                     <option value="زائر/زائرة">زائر / زائرة</option>
                 </select>
 
-                <button class="main-btn" onclick="saveUserAndEnter()">الدخول إلى قسم تكيس المبايض</button>
+                <button class="main-btn" onclick="saveUserAndEnter()">دخول للمنصة</button>
             </div>
         </div>
     </div>
@@ -49,12 +47,11 @@
                 return;
             }
 
-            // حفظ الاسم والصفة في ذاكرة المتصفح
             localStorage.setItem('userName', name);
             localStorage.setItem('userRole', role);
 
-            // الانتقال لصفحة الوحدات
-            window.location.href = "pmos.html";
+            // ينتقل للصفحة التعريفية
+            window.location.href = "welcome.html";
         }
     </script>
 </body>
