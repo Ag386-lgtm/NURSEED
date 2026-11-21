@@ -14,6 +14,31 @@
         import { saveToFirebase } from './firebase-config.js';
         window.saveToFirebase = saveToFirebase;
     </script>
+
+    <style>
+        /* تنسيق الشعارات */
+        .header-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .header-logos img {
+            height: 70px; /* حجم الشعارات */
+            width: auto;
+            object-fit: contain;
+        }
+        @media (max-width: 600px) {
+            .header-logos img {
+                height: 50px; /* تصغير الشعارات في الهاتف */
+            }
+        }
+    </style>
 </head>
 <body class="dashboard-body">
 
@@ -36,17 +61,24 @@
 
     <main class="main-content">
         
+        <!-- قسم الشعارات -->
+        <div class="header-logos">
+            <!-- تأكد من تطابق أسماء الصور مع ما رفعته في GitHub -->
+            <img src="IMG_20261121_105712_395.jpg" alt="شعار كلية التمريض - جامعة الكوفة">
+            <img src="IMG_20261121_105834_869.jpg" alt="شعار جامعة الكوفة">
+        </div>
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-            <h1 style="color: var(--primary);">قسم تكيس المبايض (PCOS)</h1>
+            <h1 style="color: var(--primary);">قسم متلازمة تكيس المبايض الأيضي (PMOS)</h1>
             <button class="main-btn" style="width: auto; padding: 10px 20px; font-size: 1em;" onclick="shareLink('pmos.html', 'قسم تكيس المبايض')">
                 <i class="fas fa-share-alt"></i> مشاركة رابط القسم
             </button>
         </div>
 
         <section class="content-section">
-            <h2>متلازمة تكيس المبايض</h2>
-            <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
-            <p>يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم متلازمة تكيس المبايض، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها.</p>
+            <h2>متلازمة تكيس المبايض الأيضي</h2>
+            <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض الأيضي (PMOS).</p>
+            <p>تم إعداد هذا المحتوى كجزء من مشروع أكاديمي لطلبة <strong>كلية التمريض - جامعة الكوفة</strong>. يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم المتلازمة، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها.</p>
             <p>يتكوّن هذا القسم من ست وحدات تعليمية مترابطة، صُمّمت لتقديم المعلومات بصورة منظمة وتفاعلية.</p>
             
             <div class="alert-box">
@@ -74,7 +106,7 @@
         </div>
 
         <main class="units-grid" id="unitsGrid" style="display: none;">
-            <!-- الوحدات -->
+            <!-- سيتم تعبئة الوحدات هنا عبر الجافاسكريبت -->
         </main>
 
     </main>
