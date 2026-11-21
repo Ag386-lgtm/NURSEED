@@ -7,11 +7,8 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- 🔥 ربط Firebase (الملف الجديد) -->
-    <script type="module">
-        import { saveToFirebase } from './firebase-config.js';
-        window.saveToFirebase = saveToFirebase; 
-    </script>
+    <!-- كود Pageclip Step 2 (الستايل) -->
+    <link rel="stylesheet" href="https://s.pageclip.co/v1/pageclip.css" media="screen">
 </head>
 <body class="landing-body">
 
@@ -24,10 +21,15 @@
         <div class="landing-content">
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
-            <div class="login-form">
-                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
+            <!-- تم تحويل الـ div إلى form ليتوافق مع Pageclip -->
+            <form class="login-form pageclip-form" 
+                  action="https://send.pageclip.co/YOUR_PAGECLIP_KEY" 
+                  method="post" 
+                  id="loginForm">
+                  
+                <input type="text" id="fullNameInput" name="fullName" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
                 
-                <select id="userRoleInput">
+                <select id="userRoleInput" name="role">
                     <option value="" disabled selected>اختر الصفة الحالية...</option>
                     <option value="طالب جامعي">طالب جامعي</option>
                     <option value="طالبة جامعية">طالبة جامعية</option>
@@ -47,77 +49,61 @@
                     <option value="أخرى">أخرى</option>
                 </select>
 
-                <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
-                <input type="password" id="userPassword" placeholder="كلمة المرور" required>
+                <input type="email" id="userEmail" name="email" placeholder="البريد الإلكتروني" required>
+                <input type="password" id="userPassword" name="password" placeholder="كلمة المرور" required>
 
-                <button class="main-btn" onclick="loginOrRegister()">الدخول إلى المنصة</button>
-            </div>
+                <!-- زر الإرسال الخاص بـ Pageclip -->
+                <button type="submit" class="main-btn pageclip-form__submit" style="position: relative;">
+                    <span>الدخول إلى المنصة</span>
+                </button>
+            </form>
+            
         </div>
     </div>
 
-    <script>
-        function loginOrRegister() {
-            const fullName = document.getElementById('fullNameInput').value.trim();
-            const role = document.getElementById('userRoleInput').value;
-            const email = document.getElementById('userEmail').value.trim();
-            const password = document.getElementById('userPassword').value;
+    <!-- كود Pageclip Step 1 (السكربت الأساسي) -->
+    <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
 
+    <!-- سكربت مخصص للتحقق من البيانات وتوجيه المستخدم -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            // التحقق من إدخال الاسم الثلاثي
+            const fullName = document.getElementById('fullNameInput').value.trim();
             if (fullName === "" || fullName.split(' ').length < 3) {
+                e.preventDefault(); // إيقاف الإرسال
                 alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
                 return;
             }
-            if (role === "") {
-                alert("الرجاء اختيار الصفة الحالية!");
-                return;
-            }
-            if (email === "" || !email.includes('@')) {
-                alert("الرجاء إدخال بريد إلكتروني صحيح!");
-                return;
-            }
+
+            // التحقق من كلمة المرور
+            const password = document.getElementById('userPassword').value;
             if (password.length < 4) {
+                e.preventDefault();
                 alert("كلمة المرور يجب أن تكون 4 أحرف على الأقل!");
                 return;
             }
 
-            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
-            
-            if (registeredUsers[email]) {
-                if (registeredUsers[email].password !== password) {
-                    alert("كلمة المرور غير صحيحة!");
-                    return;
-                }
-                localStorage.setItem('userFullName', registeredUsers[email].fullName);
-                localStorage.setItem('userRole', registeredUsers[email].role);
-            } else {
-                registeredUsers[email] = { fullName: fullName, role: role, password: password };
-                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            // إذا كانت البيانات صحيحة، نسمح لـ Pageclip بالإرسال في الخلفية
+            // ونقوم بحفظ البيانات محلياً ونقل المستخدم فوراً
+            setTimeout(() => {
+                const role = document.getElementById('userRoleInput').value;
+                const email = document.getElementById('userEmail').value.trim();
+                
                 localStorage.setItem('userFullName', fullName);
                 localStorage.setItem('userRole', role);
+                localStorage.setItem('currentEmail', email);
                 
-                // تصفير البيانات القديمة
+                // تصفير البيانات القديمة للمستخدم الجديد
                 localStorage.removeItem('surveyDone');
                 localStorage.removeItem('surveyAnswers');
                 localStorage.removeItem('preTests');
                 localStorage.removeItem('postTests');
                 localStorage.removeItem('pmos_completed');
-                
-                // إرسال بيانات التسجيل لـ Firebase
-                if(window.saveToFirebase) {
-                    window.saveToFirebase({ 
-                        action: "تسجيل مستخدم جديد", 
-                        fullName: fullName, 
-                        role: role, 
-                        email: email, 
-                        date: new Date().toISOString() 
-                    });
-                }
-                
-                alert("تم إنشاء حساب جديد بنجاح!");
-            }
 
-            localStorage.setItem('currentEmail', email);
-            window.location.href = "welcome.html";
-        }
+                // الانتقال لصفحة الترحيب
+                window.location.href = "welcome.html";
+            }, 1000); // انتظار ثانية واحدة لضمان وصول البيانات لـ Pageclip
+        });
     </script>
 </body>
 </html>
