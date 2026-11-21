@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- مكتبة لتحويل الشهادة إلى صورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .certificate-container {
@@ -25,6 +24,7 @@
         .cert-title { font-size: 2.5em; color: #333; margin: 20px 0; }
         .cert-name { font-size: 2em; color: var(--gold); font-weight: bold; margin: 20px 0; border-bottom: 2px dashed #ccc; display: inline-block; padding-bottom: 5px; }
         .cert-text { font-size: 1.2em; color: #555; line-height: 1.8; }
+        .cert-result { font-size: 1.5em; color: var(--success); font-weight: bold; margin: 15px 0; background: #e8f5e9; padding: 10px; border-radius: 10px; display: inline-block; }
         .cert-footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #777; }
         .cert-link { color: var(--primary); text-decoration: none; font-weight: bold; }
         .actions { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;}
@@ -59,10 +59,12 @@
             <div class="cert-title">شهادة إنجاز</div>
             <p class="cert-text">تُمنح هذه الشهادة إلى</p>
             
-            <!-- سيتم وضع اسم الطالب هنا ديناميكياً -->
             <div class="cert-name" id="studentName">اسم الطالب</div>
             
             <p class="cert-text">وذلك لإتمامه بنجاح جميع وحدات المسار التعليمي لمتلازمة تكيس المبايض (PCOS) على منصة NURSEED.</p>
+            
+            <!-- عرض النتيجة هنا -->
+            <div class="cert-result" id="studentScore">النتيجة النهائية: 0 / 0</div>
             
             <div class="cert-footer">
                 <div style="text-align: right;">
@@ -71,7 +73,6 @@
                 </div>
                 <div style="text-align: left;">
                     <p>رابط المنصة للتوثيق:</p>
-                    <!-- رابط المنصة -->
                     <a href="https://ag386-lgtm.github.io/NURSEED/" class="cert-link">https://ag386-lgtm.github.io/NURSEED/</a>
                 </div>
             </div>
@@ -84,13 +85,13 @@
     </main>
 
     <script>
-        // 1. جلب بيانات المستخدم وعرضها في الشهادة
         window.onload = function() {
             const name = localStorage.getItem('userFullName');
             const role = localStorage.getItem('userRole');
             const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
+            const postTests = JSON.parse(localStorage.getItem('postTests')) || {};
 
-            // التحقق من أن المستخدم أكمل جميع الوحدات
+            // التحقق من إكمال الوحدات
             if (completed.length < 6) {
                 alert("عذراً، يجب عليك إكمال جميع الوحدات الستة أولاً للحصول على الشهادة.");
                 window.location.href = "pmos.html";
@@ -102,19 +103,29 @@
                 document.getElementById('studentRole').innerText = role;
             } else {
                 window.location.href = "index.html";
+                return;
             }
 
-            // إضافة تاريخ اليوم
+            // حساب النتيجة النهائية
+            let totalScore = 0;
+            let totalQuestions = 0;
+            
+            for (let i = 1; i <= 6; i++) {
+                if (postTests[i]) {
+                    totalScore += postTests[i].score;
+                    totalQuestions += postTests[i].total;
+                }
+            }
+            document.getElementById('studentScore').innerText = `النتيجة النهائية: ${totalScore} من ${totalQuestions}`;
+
+            // إضافة التاريخ
             const today = new Date();
             const dateStr = today.getFullYear() + "/" + (today.getMonth()+1) + "/" + today.getDate();
             document.getElementById('certDate').innerText = dateStr;
         }
 
-        // 2. دالة تحميل الشهادة كصورة
         function downloadCertificate() {
             const certElement = document.getElementById('certificateArea');
-            
-            // استخدام مكتبة html2canvas لتحويل الشهادة إلى صورة
             html2canvas(certElement, { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'NURSEED_Certificate.png';
@@ -123,24 +134,15 @@
             });
         }
 
-        // 3. دالة مشاركة الشهادة (مشاركة الرابط مع رسالة)
         function shareCertificate() {
             const name = localStorage.getItem('userFullName');
             const platformUrl = "https://ag386-lgtm.github.io/NURSEED/";
-            
             const shareText = `أنا ${name}، أتممت بنجاح المسار التعليمي لمتلازمة تكيس المبايض على منصة NURSEED! 🎓\nيمكنكم زيارة المنصة عبر الرابط:`;
             
             if (navigator.share) {
-                // إذا كان الجهاز يدعم المشاركة (مثل الهواتف)
-                navigator.share({
-                    title: 'شهادة إنجاز من NURSEED',
-                    text: shareText,
-                    url: platformUrl
-                }).catch(console.error);
+                navigator.share({ title: 'شهادة إنجاز من NURSEED', text: shareText, url: platformUrl }).catch(console.error);
             } else {
-                // إذا كان على كمبيوتر، نقوم بنسخ النص
-                const fullText = shareText + " " + platformUrl;
-                navigator.clipboard.writeText(fullText);
+                navigator.clipboard.writeText(shareText + " " + platformUrl);
                 alert("تم نسخ تفاصيل الشهادة ورابط المنصة بنجاح! يمكنك لصقها في أي مكان.");
             }
         }
