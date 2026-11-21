@@ -6,24 +6,20 @@
     <title>PMOS - NURSEED</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- استدعاء مكتبة يوتيوب -->
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
-    <!-- القائمة العلوية -->
     <nav class="navbar">
         <div class="logo-container">
-            <a href="index.html" class="back-home">الرئيسية</a>
+            <a href="welcome.html" class="back-home"><i class="fas fa-arrow-right"></i> الرئيسية</a>
             <span class="platform-name">NURSEED</span>
         </div>
-        <div class="user-info" id="userGreeting"></div>
     </nav>
 
-    <!-- قسم تكيس المبايض -->
     <section class="topic-header">
-        <h2>متلازمة تكيس المبايض (PMOS)</h2>
-        <p>أكملي الوحدات بالترتيب لإنهاء المسار التعليمي</p>
+        <h2>متلازمة تكيس المبايض (PCOS)</h2>
+        <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض. يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة.</p>
         
         <div class="progress-container">
             <div class="progress-info">
@@ -37,74 +33,39 @@
         </div>
     </section>
 
-    <!-- شبكة الوحدات -->
     <main class="units-grid">
-        <!-- الوحدة 1 -->
-        <div class="unit-card" id="unit-1">
-            <div class="card-icon">📖</div>
-            <h3>المعرفة العامة</h3>
-            <p>المعرفة العامة حول متلازمة تكيس المبايض</p>
-            <button class="start-btn" onclick="openUnit(1)">ابدأ التعلم</button>
-        </div>
-        <!-- الوحدة 2 -->
-        <div class="unit-card" id="unit-2">
-            <div class="card-icon">🔍</div>
-            <h3>العلامات والأعراض</h3>
-            <p>التعرف على العلامات والأعراض</p>
-            <button class="start-btn" onclick="openUnit(2)">ابدأ التعلم</button>
-        </div>
-        <!-- الوحدة 3 -->
-        <div class="unit-card" id="unit-3">
-            <div class="card-icon">🩺</div>
-            <h3>التشخيص والفحوصات</h3>
-            <p>التشخيص والفحوصات الطبية</p>
-            <button class="start-btn" onclick="openUnit(3)">ابدأ التعلم</button>
-        </div>
-        <!-- الوحدة 4 -->
-        <div class="unit-card" id="unit-4">
-            <div class="card-icon">💊</div>
-            <h3>الرعاية والعلاج</h3>
-            <p>الرعاية والعلاج المتاح</p>
-            <button class="start-btn" onclick="openUnit(4)">ابدأ التعلم</button>
-        </div>
-        <!-- الوحدة 5 -->
-        <div class="unit-card" id="unit-5">
-            <div class="card-icon">⚖️</div>
-            <h3>التأثيرات الهرمونية</h3>
-            <p>التأثيرات الهرمونية للمتلازمة</p>
-            <button class="start-btn" onclick="openUnit(5)">ابدأ التعلم</button>
-        </div>
-        <!-- الوحدة 6 -->
-        <div class="unit-card" id="unit-6">
-            <div class="card-icon">🧪</div>
-            <h3>التأثيرات الأيضية</h3>
-            <p>المعرفة بالتأثيرات الأيضية</p>
-            <button class="start-btn" onclick="openUnit(6)">ابدأ التعلم</button>
-        </div>
+        <!-- سيتم توليد الوحدات هنا عبر الجافاسكريبت -->
+        <div id="unitsContainer" class="units-grid"></div>
     </main>
 
-    <!-- ========================================== -->
-    <!-- 🌟 النافذة المنبثقة (الفيديو والأسئلة والنتيجة) -->
-    <!-- ========================================== -->
+    <!-- 🌟 النافذة المنبثقة للاختبار والفيديو -->
     <div id="unitPopup" class="modal-overlay">
         <div class="modal-box">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             
+            <!-- قسم الاختبار القبلي -->
+            <div id="preTestSection">
+                <h3 id="preTestTitle">الاختبار القبلي</h3>
+                <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية.</p>
+                <div id="preQuizContent"></div>
+                <button class="main-btn" onclick="submitPreTest()">إرسال الإجابات وعرض الفيديو</button>
+            </div>
+
             <!-- قسم الفيديو -->
-            <div id="videoSection">
+            <div id="videoSection" style="display: none;">
                 <h3 id="popupTitle">عنوان الوحدة</h3>
-                <p id="popupDesc" class="unit-desc">وصف الوحدة</p>
                 <div class="video-wrapper">
                     <div id="player"></div>
                 </div>
-                <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الأسئلة...</div>
+                <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...</div>
             </div>
 
-            <!-- قسم الأسئلة -->
-            <div id="quizSection" style="display: none;">
-                <h3>اختبر معرفتك</h3>
-                <div id="quizContent"></div>
-                <button class="main-btn" id="submitQuizBtn" onclick="submitQuiz()">إرسال الإجابات</button>
+            <!-- قسم الاختبار البعدي -->
+            <div id="postTestSection" style="display: none;">
+                <h3>الاختبار البعدي</h3>
+                <p>يرجى الإجابة على الأسئلة التالية لقياس مدى اكتسابك للمعلومات.</p>
+                <div id="postQuizContent"></div>
+                <button class="main-btn" onclick="submitPostTest()">إرسال الإجابات</button>
             </div>
 
             <!-- قسم النتيجة -->
@@ -116,282 +77,6 @@
         </div>
     </div>
 
-    <!-- الكود البرمجي للصفحة -->
-    <script>
-        // --- 1. بيانات الوحدات ---
-        const unitsData = {
-            1: { 
-                title: "الوحدة الأولى: المعرفة العامة", 
-                desc: "ما المقصود بمتلازمة تكيس المبايض؟ وهل يمكن أن تصاب المرأة حتى لو كان وزنها طبيعياً؟",
-                videoId: "0rlto-F0NdI",
-                questions: [
-                    { q: "ما المقصود بمتلازمة تكيس المبايض؟", options: ["حالة صحية ترتبط باضطراب الهرمونات وقد تؤثر في الدورة الشهرية وصحة الجسم", "مرض ينتقل من امرأة إلى أخرى", "مرض يصيب النساء الحوامل فقط", "لا أعرف"], correct: 0 },
-                    { q: "هل يمكن أن تصاب المرأة بتكيس المبايض حتى لو كان وزنها طبيعيًا؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
-                    { q: "هل تظهر الأعراض نفسها عند جميع النساء المصابات بتكيس المبايض؟", options: ["نعم، الأعراض نفسها عند الجميع", "لا، تختلف الأعراض من امرأة إلى أخرى", "لا أعرف"], correct: 1 }
-                ]
-            },
-            2: { 
-                title: "الوحدة الثانية: العلامات والأعراض", 
-                desc: "ما هي الأعراض الشائعة؟ وكيف تختلف من امرأة لأخرى؟",
-                videoId: "J1HizKD-MN8",
-                questions: [
-                    { q: "تؤدي متلازمة PMOS إلى أعراض مثل نمو الشعر الزائد وحب الشباب.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "يمكن أن تتشابه بعض أعراض ارتفاع هرمون الحليب (البرولاكتين) مع أعراض متلازمة PMOS.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 }
-                ]
-            },
-            3: { 
-                title: "الوحدة الثالثة: التشخيص والفحوصات", 
-                desc: "كيف يتم تشخيص المتلازمة؟ وما الفحوصات المطلوبة؟",
-                videoId: "9HWzoFWjMFk",
-                questions: [
-                    { q: "ما الأمور التي قد تستخدمها الطبيبة لتقييم تكيس المبايض؟", options: ["السؤال عن الدورة الشهرية والأعراض والتاريخ الصحي", "الفحص السريري وبعض تحليل الدم", "التصوير بالموجات فوق الصوتية (سونار) عند الحاجة", "جميع ما سبق، حسب حالة المرأة"], correct: 3 },
-                    { q: "هل تحتاج كل امرأة بالغة يُشتبه بإصابتها بتكيس المبايض إلى تصوير المبايض بالموجات فوق الصوتية (سونار)؟", options: ["نعم، في جميع الحالات", "لا، فقد يكون التشخيص ممكنًا دون التصوير إذا توفرت معايير التشخيص المناسبة", "لا أعرف"], correct: 1 },
-                    { q: "ماذا ينبغي أن تفعل المرأة إذا كانت تعاني من تأخر الدورة باستمرار أو أعراض توحي بتكيس المبايض؟", options: ["تشخَّص نفسها من خلال مواقع التواصل الاجتماعي", "تتجاهل الأعراض", "تراجع طبيبة أو مختصاً صحياً لتقييم حالتها", "تستخدم الأدوية من دون استشارة طبية"], correct: 2 }
-                ]
-            },
-            4: { 
-                title: "الوحدة الرابعة: الرعاية والعلاج", 
-                desc: "ما هي طرق العلاج والرعاية الصحية المتاحة؟",
-                videoId: "slI_o2kv-IU",
-                questions: [
-                    { q: "ما الأمور التي تساعد على دعم صحة المرأة المصابة بتكيس المبايض؟", options: ["تناول طعام متوازن", "ممارسة نشاط بدني مناسب", "النوم الكافي واتباع عادات صحية", "جميع ما سبق"], correct: 3 },
-                    { q: "هل يوجد علاج واحد يناسب جميع النساء المصابات بتكيس المبايض؟", options: ["نعم، العلاج نفسه يناسب الجميع", "لا، يختلف العلاج حسب الأعراض والحالة الصحية واحتياجات كل امرأة", "لا أعرف"], correct: 1 },
-                    { q: "لماذا تعد المتابعة الصحية مهمة للمرأة المصابة بتكيس المبايض؟", options: ["لمتابعة صحة الجسم والهرمونات", "للكشف عن المشكلات الصحية المحتملة مبكراً", "للمساعدة على اختيار الرعاية والعلاج المناسبين", "جميع ما سبق"], correct: 3 }
-                ]
-            },
-            5: { 
-                title: "الوحدة الخامسة: التأثيرات الهرمونية", 
-                desc: "كيف تؤثر المتلازمة على هرمونات الجسم؟",
-                videoId: "6w0TsarkfkY",
-                questions: [
-                    { q: "يمكن أن يؤدي الارتفاع المستمر في مستويات الأنسولين إلى تحفيز المبيضين والغدد الصماء على إنتاج كميات زائدة من الهرمونات الذكرية.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "قد يؤثر ارتفاع هرمون التوتر (الكورتيزول) المفرز من الغدة الكظرية في التوازن الهرمونات الجنسية.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "قد يؤدي الخلل الهرموني المصاحب للمتلازمة إلى عدم اكتمال نضج البويضات، مما قد يسبب صعوبات في الخصوبة والإنجاب.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 }
-                ]
-            },
-            6: { 
-                title: "الوحدة السادسة: التأثيرات الأيضية", 
-                desc: "ما هو تأثير المتلازمة على عملية الأيض ومقاومة الإنسولين؟",
-                videoId: "Wp2CiybENRo",
-                questions: [
-                    { q: "يرتبط تكيس المبايض بمقاومة الإنسولين وزيادة خطر الإصابة بالسكري من النوع الثاني؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
-                    { q: "تُعد مقاومة الأنسولين من العوامل الأيضية الرئيسية المرتبطة بمتلازمة PMOS، إذ تؤثر في قدرة الجسم على استخدام السكر بفاعلية.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "يُعد تراكم الدهون في منطقة البطن (السمنة الحشوية) مؤشرًا مهمًا على وجود خلل أيضي، حتى إذا كان الوزن الإجمالي ضمن المعدل الطبيعي.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "تساهم التغيرات في نمط الحياة، مثل اتباع نظام غذائي منخفض المؤشر الجلايسيمي وممارسة الرياضة، في تحسين حساسية الجسم للأنسولين.", options: ["صحیح", "خطأ", "لا أعرف"], correct: 0 },
-                    { q: "هل يمكن أن يزيد قصور الغدة الدرقية من مقاومة الإنسولين لدى النساء المصابات بتكيس المبايض؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 }
-                ]
-            }
-        };
-
-        let currentUnit = 0;
-        let player = null;
-        let questionTimer = null;
-
-        // --- 2. تشغيل مكتبة يوتيوب (تشتغل تلقائياً) ---
-        function onYouTubeIframeAPIReady() {
-            // ننتظر لين يفتح المستخدم الوحدة، عشان نشغل الفيديو
-        }
-
-        // --- 3. فتح الوحدة ---
-        function openUnit(unitId) {
-            currentUnit = unitId;
-            const data = unitsData[unitId];
-            
-            // تحديث نصوص النافذة
-            document.getElementById('popupTitle').innerText = data.title;
-            document.getElementById('popupDesc').innerText = data.desc;
-            
-            // إخفاء الأقسام القديمة
-            document.getElementById('quizSection').style.display = 'none';
-            document.getElementById('resultSection').style.display = 'none';
-            document.getElementById('videoSection').style.display = 'block';
-            document.getElementById('videoStatus').innerText = "⏳ يرجى مشاهدة الفيديو بالكامل لفتح الأسئلة...";
-            document.getElementById('videoStatus').style.color = "#e91e63";
-            
-            // إظهار النافذة
-            document.getElementById('unitPopup').style.display = 'flex';
-
-            // تشغيل مشغل يوتيوب
-            if(player) { player.destroy(); } // إتلاف المشغل القديم إذا وجد
-            
-            setTimeout(() => {
-                player = new YT.Player('player', {
-                    height: '100%',
-                    width: '100%',
-                    videoId: data.videoId,
-                    playerVars: { 'autoplay': 0, 'rel': 0 },
-                    events: {
-                        'onStateChange': onPlayerStateChange
-                    }
-                });
-            }, 300);
-        }
-
-        // --- 4. مراقبة الفيديو (إذا خلص، يطلع الأسئلة) ---
-        function onPlayerStateChange(event) {
-            // إذا وصل لنهاية الفيديو (الكود 0)
-            if (event.data === YT.PlayerState.ENDED) {
-                document.getElementById('videoStatus').innerText = "✅ لقد أكملت مشاهدة الفيديو! تظهر الأسئلة الآن...";
-                document.getElementById('videoStatus').style.color = "#4caf50";
-                
-                // ننتظر ثانية ونطلع الأسئلة
-                setTimeout(() => {
-                    showQuiz();
-                }, 1000);
-            }
-        }
-
-        // --- 5. عرض الأسئلة ---
-        function showQuiz() {
-            document.getElementById('videoSection').style.display = 'none';
-            document.getElementById('quizSection').style.display = 'block';
-            
-            const quizContent = document.getElementById('quizContent');
-            quizContent.innerHTML = "";
-            const questions = unitsData[currentUnit].questions;
-
-            questions.forEach((q, index) => {
-                let html = `<div class="question-item" id="q-${index}"><div class="question-text">${index + 1}. ${q.q}</div>`;
-                q.options.forEach((opt, optIndex) => {
-                    html += `<label class="option-label" id="opt-${index}-${optIndex}"><input type="radio" name="q${index}" value="${optIndex}"> ${opt}</label>`;
-                });
-                html += `<div class="feedback-msg" id="fb-${index}"></div></div>`;
-                quizContent.innerHTML += html;
-            });
-
-            document.getElementById('submitQuizBtn').style.display = 'block';
-            document.getElementById('submitQuizBtn').innerText = "إرسال الإجابات";
-        }
-
-        // --- 6. تصحيح الإجابات ---
-        function submitQuiz() {
-            const questions = unitsData[currentUnit].questions;
-            let allCorrect = true;
-            let answeredAll = true;
-            let score = 0;
-
-            questions.forEach((q, index) => {
-                const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                const feedback = document.getElementById(`fb-${index}`);
-
-                // إزالة تنسيقات قديمة
-                q.options.forEach((_, optIndex) => {
-                    document.getElementById(`opt-${index}-${optIndex}`).classList.remove('correct-answer', 'wrong-answer');
-                });
-
-                if (!selected) {
-                    answeredAll = false;
-                    return;
-                }
-
-                const selectedVal = parseInt(selected.value);
-                const isCorrect = selectedVal === q.correct;
-
-                if (isCorrect) {
-                    score++;
-                    document.getElementById(`opt-${index}-${selectedVal}`).classList.add('correct-answer');
-                    feedback.style.display = 'none';
-                } else {
-                    allCorrect = false;
-                    document.getElementById(`opt-${index}-${selectedVal}`).classList.add('wrong-answer');
-                    document.getElementById(`opt-${index}-${q.correct}`).classList.add('correct-answer');
-                    feedback.style.display = 'block';
-                    feedback.className = 'feedback-msg feedback-correct';
-                    feedback.innerText = "الإجابة الصحيحة: " + q.options[q.correct];
-                }
-            });
-
-            if (!answeredAll) {
-                alert("الرجاء الإجابة على جميع الأسئلة قبل الإرسال.");
-                return;
-            }
-
-            if (allCorrect) {
-                // إظهار النتيجة
-                showResult(score);
-            } else {
-                document.getElementById('submitQuizBtn').innerText = "حاول مرة أخرى";
-                alert("⚠️ يوجد بعض الإجابات غير الصحيحة. راجع الإجابات المظللة.");
-            }
-        }
-
-        // --- 7. عرض النتيجة والانتقال ---
-        function showResult(score) {
-            document.getElementById('quizSection').style.display = 'none';
-            document.getElementById('resultSection').style.display = 'block';
-
-            const total = unitsData[currentUnit].questions.length;
-            const resultText = document.getElementById('resultText');
-            
-            resultText.innerHTML = `<div style="font-size: 2em; margin-bottom: 15px;">🎉</div>
-                <h4>أحسنت! لقد أجبت على جميع الأسئلة بشكل صحيح.</h4>
-                <p>النتيجة: ${score} / ${total} (100%)</p>`;
-            
-            // حفظ التقدم
-            let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
-            if (!completed.includes(currentUnit)) {
-                completed.push(currentUnit);
-                localStorage.setItem('pmos_completed', JSON.stringify(completed));
-                updateProgress();
-            }
-
-            // إعداد زر الانتقال
-            const nextBtn = document.getElementById('nextBtn');
-            if (currentUnit < 6) {
-                nextBtn.style.display = 'block';
-                nextBtn.innerText = "الانتقال للوحدة التالية ➡️";
-            } else {
-                nextBtn.style.display = 'none';
-                resultText.innerHTML += `<p style="color: var(--success); font-weight: bold; margin-top: 15px;">🎓 لقد أكملت جميع الوحدات بنجاح!</p>`;
-            }
-        }
-
-        // --- 8. الانتقال للوحدة التالية ---
-        function nextUnit() {
-            if (currentUnit < 6) {
-                closePopup();
-                setTimeout(() => {
-                    openUnit(currentUnit + 1);
-                }, 500);
-            }
-        }
-
-        // --- 9. إغلاق النافذة ---
-        function closePopup() {
-            document.getElementById('unitPopup').style.display = 'none';
-            if(player) player.stopVideo(); // إيقاف الفيديو
-        }
-
-        // --- 10. تحديث شريط التقدم ---
-        function updateProgress() {
-            let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
-            for(let i=1; i<=6; i++) {
-                const card = document.getElementById(`unit-${i}`);
-                if(!card) continue;
-                const btn = card.querySelector('.start-btn');
-                if(completed.includes(i)) {
-                    card.classList.add('completed');
-                    btn.innerText = "مكتملة ✅";
-                    btn.style.pointerEvents = "none";
-                } else {
-                    card.classList.remove('completed');
-                    btn.innerText = "ابدأ التعلم";
-                    btn.style.pointerEvents = "auto";
-                }
-            }
-            const percent = Math.round((completed.length / 6) * 100);
-            document.getElementById('progressText').innerText = percent + "%";
-            document.getElementById('progressFill').style.width = percent + "%";
-            document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-        }
-
-        // --- 11. الترحيب ---
-        window.onload = function() {
-            const name = localStorage.getItem('userName');
-            const role = localStorage.getItem('userRole');
-            if(name && role) document.getElementById('userGreeting').innerText = `مرحباً، ${role} ${name}`;
-            updateProgress();
-        };
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
