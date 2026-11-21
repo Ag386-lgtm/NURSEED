@@ -61,9 +61,8 @@
             
             <div class="cert-name" id="studentName">اسم الطالب</div>
             
-            <p class="cert-text">وذلك لإتمامه بنجاح جميع وحدات المسار التعليمي لمتلازمة تكيس المبايض (PCOS) على منصة NURSEED.</p>
+            <p class="cert-text">وذلك لإتمامه بنجاح جميع وحدات المسار التعليمي لمتلازمة تكيس المبايض الأيضي على منصة NURSEED.</p>
             
-            <!-- عرض النتيجة هنا -->
             <div class="cert-result" id="studentScore">النتيجة النهائية: 0 / 0</div>
             
             <div class="cert-footer">
@@ -91,9 +90,8 @@
             const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
             const postTests = JSON.parse(localStorage.getItem('postTests')) || {};
 
-            // التحقق من إكمال الوحدات
             if (completed.length < 6) {
-                alert("عذراً، يجب عليك إكمال جميع الوحدات الستة أولاً للحصول على الشهادة.");
+                alert("عذراً، يجب عليك إكمال جميع الوحدات الستة أولاً للحصول على الشهادة النهائية.");
                 window.location.href = "pmos.html";
                 return;
             }
@@ -106,7 +104,6 @@
                 return;
             }
 
-            // حساب النتيجة النهائية
             let totalScore = 0;
             let totalQuestions = 0;
             
@@ -118,7 +115,6 @@
             }
             document.getElementById('studentScore').innerText = `النتيجة النهائية: ${totalScore} من ${totalQuestions}`;
 
-            // إضافة التاريخ
             const today = new Date();
             const dateStr = today.getFullYear() + "/" + (today.getMonth()+1) + "/" + today.getDate();
             document.getElementById('certDate').innerText = dateStr;
@@ -137,7 +133,7 @@
         function shareCertificate() {
             const name = localStorage.getItem('userFullName');
             const platformUrl = "https://ag386-lgtm.github.io/NURSEED/";
-            const shareText = `أنا ${name}، أتممت بنجاح المسار التعليمي لمتلازمة تكيس المبايض على منصة NURSEED! 🎓\nيمكنكم زيارة المنصة عبر الرابط:`;
+            const shareText = `أنا ${name}، أتممت بنجاح المسار التعليمي لمتلازمة تكيس المبايض الأيضي على منصة NURSEED! 🎓\nيمكنكم زيارة المنصة عبر الرابط:`;
             
             if (navigator.share) {
                 navigator.share({ title: 'شهادة إنجاز من NURSEED', text: shareText, url: platformUrl }).catch(console.error);
