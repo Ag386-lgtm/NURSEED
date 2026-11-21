@@ -31,12 +31,12 @@
             const querySnapshot = await getDocs(q);
             
             if (!querySnapshot.empty) {
-                return querySnapshot.docs[0].data(); 
+                return querySnapshot.docs[0].data(); // إرجاع بيانات المستخدم إذا وجد
             }
-            return null; 
+            return null; // إرجاع null إذا لم يوجد
         }
 
-        // دالة حفظ مستخدم جديد
+        // دالة حفظ مستخدم جديد في Firebase
         window.saveUserToFirebase = async function(userData) {
             try {
                 await addDoc(collection(db, "nurseed_users"), userData);
@@ -59,8 +59,9 @@
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <!-- حقول الاسم والصفة -->
+                <!-- جميع الخانات ظاهرة دائماً -->
                 <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
+                
                 <select id="userRoleInput">
                     <option value="" disabled selected>اختر الصفة الحالية...</option>
                     <option value="طالب جامعي">طالب جامعي</option>
@@ -90,7 +91,7 @@
     </div>
 
     <script>
-        // عند تحميل الصفحة، نملأ البيانات السابقة تلقائياً إن وجدت (لتسهيل الدخول)
+        // عند فتح الصفحة، نقوم بتعبئة البيانات السابقة تلقائياً (إن وجدت) لتسهيل الدخول
         window.onload = function() {
             const savedName = localStorage.getItem('userFullName');
             const savedRole = localStorage.getItem('userRole');
@@ -107,15 +108,7 @@
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
             
-            // التحقق من المدخلات (الاسم والصفة مطلوبان دائماً)
-            if (fullName === "" || fullName.split(' ').length < 3) {
-                alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
-                return;
-            }
-            if (role === "") {
-                alert("الرجاء اختيار الصفة الحالية!");
-                return;
-            }
+            // التحقق من أن الحقول ليست فارغة
             if (email === "" || !email.includes('@')) {
                 alert("الرجاء إدخال بريد إلكتروني صحيح!");
                 return;
@@ -128,33 +121,47 @@
             // البحث في Firebase
             if(window.checkUserInFirebase) {
                 window.checkUserInFirebase(email).then(user => {
+                    
+                    // 1. إذا كان المستخدم موجوداً في Firebase (حساب قديم)
                     if (user) {
-                        // إذا كان الإيميل موجوداً، نتحقق من كلمة المرور
                         if (user.password !== password) {
                             alert("كلمة المرور غير صحيحة!");
                             return;
                         }
                         
-                        // تحديث بيانات الاسم والصفة في المتصفح (في حال قام بتغييرها)
-                        localStorage.setItem('userFullName', fullName);
-                        localStorage.setItem('userRole', role);
+                        // تحديث بيانات المتصفح (في حال قام بتغيير الاسم)
+                        localStorage.setItem('userFullName', fullName || user.fullName);
+                        localStorage.setItem('userRole', role || user.role);
                         localStorage.setItem('currentEmail', email);
                         
+                        // الدخول إلى الصفحة التالية (مع الاحتفاظ بالتقدم القديم)
                         window.location.href = "welcome.html";
+                    
+                    // 2. إذا لم يكن موجوداً (حساب جديد)
                     } else {
-                        // مستخدم جديد تماماً (لم نجد إيميله في Firebase)
+                        // التحقق من إدخال الاسم والصفة للمستخدم الجديد
+                        if (fullName === "" || fullName.split(' ').length < 3) {
+                            alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
+                            return;
+                        }
+                        if (role === "") {
+                            alert("الرجاء اختيار الصفة الحالية!");
+                            return;
+                        }
+
+                        // حفظ المستخدم الجديد في Firebase
                         const newUser = { fullName: fullName, role: role, email: email, password: password, date: new Date().toISOString() };
                         
                         if(window.saveUserToFirebase) {
                             window.saveUserToFirebase(newUser);
                         }
 
-                        // حفظ بياناته محلياً
+                        // حفظ بيانات المستخدم في المتصفح
                         localStorage.setItem('userFullName', fullName);
                         localStorage.setItem('userRole', role);
                         localStorage.setItem('currentEmail', email);
                         
-                        // تصفير التقدم لأنه مستخدم جديد
+                        // مسح التقدم القديم فقط للمستخدم الجديد
                         localStorage.removeItem('surveyDone');
                         localStorage.removeItem('surveyAnswers');
                         localStorage.removeItem('preTests');
