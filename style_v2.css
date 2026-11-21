@@ -19,7 +19,7 @@ body.dark-mode {
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
 body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; transition: 0.3s; }
 
-/* 1. صفحة الدخول الطولية */
+/* 1. صفحة الدخول */
 .landing-body {
     display: flex; justify-content: center; align-items: center; min-height: 100vh;
     background: linear-gradient(135deg, #ede7f6, #e1bee7); padding: 20px;
@@ -48,7 +48,7 @@ body { background-color: var(--bg-color); color: var(--text-dark); line-height: 
 }
 .main-btn:hover { background: var(--primary-light); transform: translateY(-3px); }
 
-/* 2. لوحة التحكم (Dashboard) */
+/* 2. لوحة التحكم */
 .dashboard-body { display: flex; min-height: 100vh; }
 .sidebar { width: 280px; background: var(--sidebar-bg); color: var(--white); padding: 30px 0; display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; transition: 0.3s; z-index: 1000; }
 .sidebar-logo { text-align: center; padding: 0 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
