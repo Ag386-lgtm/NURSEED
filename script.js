@@ -1,14 +1,10 @@
-// 1. إدارة الحساب بناءً على الإيميل
-const currentUserEmail = localStorage.getItem('userEmail');
-const lastUserEmail = localStorage.getItem('lastLoggedUserEmail');
-
-if (currentUserEmail !== lastUserEmail && currentUserEmail) {
-    localStorage.removeItem('surveyDone'); localStorage.removeItem('surveyAnswers');
-    localStorage.removeItem('preTests'); localStorage.removeItem('postTests'); localStorage.removeItem('pmos_completed');
-    localStorage.setItem('lastLoggedUserEmail', currentUserEmail);
+// 1. إدارة حساب المستخدم بناءً على الإيميل
+const currentEmail = localStorage.getItem('currentEmail');
+if (!currentEmail) {
+    window.location.href = "index.html"; // إذا ماكو إيميل مسجل، يرجعه للدخول
 }
 
-// 2. البيانات
+// 2. البيانات (الاستبيان والوحدات)
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
     { q: "2. المستوى التعليمي:", type: "select", options: ["غير متعلم", "إعدادية أو أقل", "دبلوم", "بكالوريوس", "دراسات عليا"] },
@@ -138,7 +134,7 @@ let currentUnit = 0;
 let player = null;
 let isReviewing = false;
 
-// 3. الأزرار والمشاركة
+// 3. الأزرار والمشاركة والوضع الليلي
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 function agreeCertificate() { localStorage.setItem('certificateAgreed', 'true'); alert("تم التسجيل! بالتوفيق في رحلتك التعليمية."); }
@@ -155,7 +151,14 @@ function shareLink(pageUrl, titleText) {
 
 // 4. تشغيل الصفحة
 window.onload = function() {
-    if(!document.getElementById('surveyContainer')) return; // للصفحات الأخرى
+    // تحديث اسم المستخدم في الهيدر
+    const name = localStorage.getItem('userFullName');
+    const role = localStorage.getItem('userRole');
+    const greetingEl = document.getElementById('welcomeText');
+    if (greetingEl && name && role) greetingEl.innerText = `مرحباً، ${role} ${name}`;
+
+    // إذا كنا في صفحة الوحدات (pmos.html) نشغل باقي الكود
+    if(!document.getElementById('surveyContainer')) return;
 
     const isSurveyDone = localStorage.getItem('surveyDone');
     const surveyContainer = document.getElementById('surveyContainer');
@@ -396,4 +399,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-            }
+    }
