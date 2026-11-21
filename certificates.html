@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>شهاداتي | NURSEED</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- تم تحديث اسم ملف التصميم -->
+    <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -86,7 +87,6 @@
                             text: 'أنا فخور بإكمال رحلتي التعليمية في منصة NURSEED!'
                         }).catch(console.error);
                     } else {
-                        // إذا المتصفح ما يدعم المشاركة المباشرة، يحمل الصورة
                         const link = document.createElement('a');
                         link.download = 'NURSEED-Certificate.png';
                         link.href = canvas.toDataURL();
