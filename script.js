@@ -1,13 +1,13 @@
 // ==========================================
-// 1. إدارة حساب المستخدم بناءً على الإيميل
+// 1. إدارة الحساب
 // ==========================================
 const currentEmail = localStorage.getItem('currentEmail');
 if (!currentEmail) {
-    window.location.href = "index.html"; // إذا ماكو إيميل مسجل، يرجعه للدخول
+    window.location.href = "index.html"; 
 }
 
 // ==========================================
-// 2. بيانات الاستبيان والوحدات
+// 2. البيانات (الاستبيان والوحدات)
 // ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
@@ -38,7 +38,9 @@ const surveyQuestions = [
 ];
 
 const unitsData = {
-    1: { title: "المعرفة العامة بمتلازمة تكيس المبايض", videoId: "0rlto-F0NdI",
+    1: { 
+        title: "المعرفة العامة بمتلازمة تكيس المبايض", 
+        videoId: "0rlto-F0NdI",
         preTest: [
             { q: "ما المقصود بمتلازمة تكيس المبايض؟", options: ["حالة صحية ترتبط باضطراب الهرمونات", "مرض ينتقل من امرأة لأخرى", "مرض يصيب الحوامل فقط", "لا أعرف"], correct: 0 },
             { q: "هل يمكن أن تصاب المرأة حتى لو كان وزنها طبيعياً؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
@@ -52,7 +54,9 @@ const unitsData = {
             { q: "هل يعني تكيس المبايض أن المرأة لن تحمل مطلقاً؟", options: ["نعم، لا يمكنها الحمل", "لا، يمكن لكثير منهن الحمل", "لا أعرف"], correct: 1 }
         ]
     },
-    2: { title: "العلامات والأعراض", videoId: "J1HizKD-MN8",
+    2: { 
+        title: "العلامات والأعراض", 
+        videoId: "J1HizKD-MN8",
         preTest: [
             { q: "أي من الأعراض التالية قد تظهر؟", options: ["عدم انتظام الدورة", "زيادة نمو الشعر", "حب الشباب", "جميع ما سبق"], correct: 3 },
             { q: "متى تستدعي مراجعة الطبيبة؟", options: ["تأخر الدورة باستمرار", "انتظامها", "لا داعي للمراجعة", "لا أعرف"], correct: 0 },
@@ -68,7 +72,9 @@ const unitsData = {
             { q: "هل اضطرابات الغدة الدرقية تشبه أعراضها؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 }
         ]
     },
-    3: { title: "التشخيص والفحوصات", videoId: "9HWzoFWjMFk",
+    3: { 
+        title: "التشخيص والفحوصات", 
+        videoId: "9HWzoFWjMFk",
         preTest: [
             { q: "كيف تعرف المرأة إصابتها؟", options: ["بالأعراض فقط", "بمراجعة الطبيبة والفحوصات", "بالوزن فقط", "لا أعرف"], correct: 1 },
             { q: "ما تستخدمه الطبيبة للتقييم؟", options: ["السؤال عن الدورة", "تحاليل الدم", "السونار", "جميع ما سبق"], correct: 3 },
@@ -82,7 +88,9 @@ const unitsData = {
             { q: "ماذا تفعل عند تأخر الدورة؟", options: ["تشخص نفسها", "تتجاهل", "تراجع طبيبة", "تستخدم أدوية"], correct: 2 }
         ]
     },
-    4: { title: "الرعاية والعلاج", videoId: "slI_o2kv-IU",
+    4: { 
+        title: "الرعاية والعلاج", 
+        videoId: "slI_o2kv-IU",
         preTest: [
             { q: "ما الأمور التي تدعم صحة المصابة؟", options: ["طعام متوازن", "نشاط بدني", "نوم كافي", "جميع ما سبق"], correct: 3 },
             { q: "هل يوجد علاج واحد للجميع؟", options: ["نعم", "لا، يختلف حسب الحالة", "لا أعرف"], correct: 1 },
@@ -96,7 +104,9 @@ const unitsData = {
             { q: "لماذا المتابعة الصحية؟", options: ["لمتابعة الأعراض", "لتغيير العلاج", "لمتابعة المخاطر", "جميع ما سبق"], correct: 3 }
         ]
     },
-    5: { title: "التأثيرات الهرمونية والغدد الصماء", videoId: "6w0TsarkfkY",
+    5: { 
+        title: "التأثيرات الهرمونية والغدد الصماء", 
+        videoId: "6w0TsarkfkY",
         preTest: [
             { q: "هل يؤثر تكيس المبايض في الحالة النفسية؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
             { q: "لماذا المتابعة الصحية مهمة؟", options: ["لمتابعة الهرمونات", "لكشف المشكلات مبكراً", "لاختيار العلاج", "جميع ما سبق"], correct: 3 },
@@ -116,7 +126,9 @@ const unitsData = {
             { q: "الخلل الهرموني يسبب صعوبات في الخصوبة.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }
         ]
     },
-    6: { title: "المعرفة بالجانب الأيضي", videoId: "Wp2CiybENRo",
+    6: { 
+        title: "المعرفة بالجانب الأيضي", 
+        videoId: "Wp2CiybENRo",
         preTest: [
             { q: "هل يرتبط تكيس المبايض بمقاومة الإنسولين؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
             { q: "مقاومة الإنسولين تؤثر في استخدام السكر.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 },
@@ -208,8 +220,16 @@ function submitSurvey() {
     }
     localStorage.setItem('surveyAnswers', JSON.stringify(answers));
     
-    // 🔴 كود إرسال الاستبيان لج (يفعل لاحقاً)
-    // window.sendToFirebase({ action: "تسجيل جديد", name: localStorage.getItem('userFullName'), email: localStorage.getItem('currentEmail'), date: new Date().toISOString() });
+    // إرسال الاستبيان لج كمديرة عبر Firebase
+    if(window.saveToFirebase) {
+        window.saveToFirebase({ 
+            action: "استبيان ديموغرافي", 
+            name: localStorage.getItem('userFullName'), 
+            email: currentEmail, 
+            answers: answers,
+            date: new Date().toISOString() 
+        });
+    }
 
     alert("شكراً لك! تم استلام إجاباتك. تظهر الوحدات الآن.");
     localStorage.setItem('surveyDone', 'true');
@@ -250,13 +270,11 @@ function openUnit(unitId, reviewMode) {
         let postData = JSON.parse(localStorage.getItem('postTests')) || {};
         let preData = JSON.parse(localStorage.getItem('preTests')) || {};
         
-        // إظهار قسم الفيديو
         document.getElementById('videoSection').style.display = 'block';
         document.getElementById('popupTitle').innerText = `مراجعة: ${data.title}`;
         document.getElementById('videoStatus').innerText = "✅ لقد أكملت هذه الوحدة مسبقاً. هذه مراجعة فقط.";
         document.getElementById('videoStatus').style.color = "#4caf50";
 
-        // إظهار النتيجة والإجابات السابقة بالتفصيل
         const resultText = document.getElementById('resultText');
         let reviewHtml = "";
         
@@ -339,6 +357,12 @@ function submitPreTest() {
     let allPre = JSON.parse(localStorage.getItem('preTests')) || {};
     allPre[currentUnit] = preAnswers;
     localStorage.setItem('preTests', JSON.stringify(allPre));
+    
+    // إرسال الاختبار القبلي لج
+    if(window.saveToFirebase) {
+        window.saveToFirebase({ action: "اختبار قبلي", name: localStorage.getItem('userFullName'), email: currentEmail, unit: currentUnit, answers: preAnswers, date: new Date().toISOString() });
+    }
+
     document.getElementById('preTestSection').style.display = 'none';
     document.getElementById('videoSection').style.display = 'block';
     document.getElementById('popupTitle').innerText = data.title;
@@ -384,8 +408,19 @@ function submitPostTest() {
     allPost[currentUnit] = { answers: postAnswers, score: score, total: data.postTest.length };
     localStorage.setItem('postTests', JSON.stringify(allPost));
 
-    // 🔴 كود إرسال النتيجة لج (يفعل لاحقاً)
-    // window.sendToFirebase({ action: "إنهاء وحدة", name: localStorage.getItem('userFullName'), email: localStorage.getItem('currentEmail'), unit: currentUnit, score: score, total: data.postTest.length, date: new Date().toISOString() });
+    // إرسال النتيجة النهائية للوحدة لج
+    if(window.saveToFirebase) {
+        window.saveToFirebase({ 
+            action: "إنهاء وحدة", 
+            name: localStorage.getItem('userFullName'), 
+            email: currentEmail, 
+            unit: currentUnit, 
+            score: score, 
+            total: data.postTest.length,
+            answers: postAnswers,
+            date: new Date().toISOString() 
+        });
+    }
 
     document.getElementById('postTestSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
@@ -446,4 +481,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-                }
+}
