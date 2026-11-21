@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NURSEED | تسجيل الدخول</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body class="landing-body">
@@ -43,6 +43,9 @@
                     <option value="أخرى">أخرى</option>
                 </select>
 
+                <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+                <input type="password" id="userPassword" placeholder="كلمة المرور" required>
+
                 <button class="main-btn" onclick="registerUser()">الدخول إلى المنصة</button>
             </div>
         </div>
@@ -54,20 +57,45 @@
             const faName = document.getElementById('fatherName').value.trim();
             const gName = document.getElementById('grandfatherName').value.trim();
             const role = document.getElementById('userRoleInput').value;
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
 
             if (fName === "" || faName === "" || gName === "") {
-                alert("الرجاء إدخال الاسم الثلاثي (الاسم الأول، اسم الأب، اسم الجد)!");
+                alert("الرجاء إدخال الاسم الثلاثي!");
                 return;
             }
             if (role === "") {
                 alert("الرجاء اختيار الصفة الحالية!");
                 return;
             }
+            if (email === "" || !email.includes('@')) {
+                alert("الرجاء إدخال بريد إلكتروني صحيح!");
+                return;
+            }
+            if (password.length < 4) {
+                alert("كلمة المرور يجب أن تكون 4 أحرف على الأقل!");
+                return;
+            }
 
             const fullName = `${fName} ${faName} ${gName}`;
+            
             localStorage.setItem('userFullName', fullName);
             localStorage.setItem('userRole', role);
-            localStorage.setItem('lastLoggedUser', fullName);
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userPassword', password);
+
+            // التحقق من الإيميل لمنع تشابه الأسماء
+            const lastUserEmail = localStorage.getItem('lastLoggedUserEmail');
+            
+            if (email !== lastUserEmail) {
+                // إيميل جديد = تصفير كل شيء
+                localStorage.removeItem('surveyDone');
+                localStorage.removeItem('surveyAnswers');
+                localStorage.removeItem('preTests');
+                localStorage.removeItem('postTests');
+                localStorage.removeItem('pmos_completed');
+                localStorage.setItem('lastLoggedUserEmail', email);
+            }
 
             window.location.href = "welcome.html";
         }
