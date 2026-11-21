@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- 🔥 ربط Firebase (بدون أي أكواد خارجية) -->
+    <!-- 🔥 ربط Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -24,7 +24,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // دالة الإرسال في الخلفية
         window.sendDataToFirebase = async function(data) {
             try {
                 await addDoc(collection(db, "nurseed_data"), data);
@@ -47,27 +46,30 @@
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
-                
-                <select id="userRoleInput">
-                    <option value="" disabled selected>اختر الصفة الحالية...</option>
-                    <option value="طالب جامعي">طالب جامعي</option>
-                    <option value="طالبة جامعية">طالبة جامعية</option>
-                    <option value="طالب مدرسي">طالب مدرسي</option>
-                    <option value="طالبة مدرسية">طالبة مدرسية</option>
-                    <option value="خريج جامعي">خريج جامعي</option>
-                    <option value="خريجة جامعية">خريجة جامعية</option>
-                    <option value="موظف">موظف</option>
-                    <option value="موظفة">موظفة</option>
-                    <option value="متقاعد">متقاعد</option>
-                    <option value="متقاعدة">متقاعدة</option>
-                    <option value="عمل حر">عمل حر</option>
-                    <option value="باحث أكاديمي">باحث أكاديمي</option>
-                    <option value="باحثة أكاديمية">باحثة أكاديمية</option>
-                    <option value="ربة منزل">ربة منزل</option>
-                    <option value="بدون عمل حالياً">بدون عمل حالياً</option>
-                    <option value="أخرى">أخرى</option>
-                </select>
+                <!-- أضفنا حقول مخفية تظهر فقط للمستخدم الجديد -->
+                <div id="newUserFields">
+                    <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
+                    
+                    <select id="userRoleInput">
+                        <option value="" disabled selected>اختر الصفة الحالية...</option>
+                        <option value="طالب جامعي">طالب جامعي</option>
+                        <option value="طالبة جامعية">طالبة جامعية</option>
+                        <option value="طالب مدرسي">طالب مدرسي</option>
+                        <option value="طالبة مدرسية">طالبة مدرسية</option>
+                        <option value="خريج جامعي">خريج جامعي</option>
+                        <option value="خريجة جامعية">خريجة جامعية</option>
+                        <option value="موظف">موظف</option>
+                        <option value="موظفة">موظفة</option>
+                        <option value="متقاعد">متقاعد</option>
+                        <option value="متقاعدة">متقاعدة</option>
+                        <option value="عمل حر">عمل حر</option>
+                        <option value="باحث أكاديمي">باحث أكاديمي</option>
+                        <option value="باحثة أكاديمية">باحثة أكاديمية</option>
+                        <option value="ربة منزل">ربة منزل</option>
+                        <option value="بدون عمل حالياً">بدون عمل حالياً</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
 
                 <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
                 <input type="password" id="userPassword" placeholder="كلمة المرور" required>
@@ -78,20 +80,26 @@
     </div>
 
     <script>
+        // 1. عند تحميل الصفحة، نتحقق إذا كان المستخدم قد سجل دخول سابقاً
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('currentEmail');
+            if (savedEmail) {
+                // إذا كان مسجل، نخفي حقول الاسم والصفة
+                document.getElementById('newUserFields').style.display = 'none';
+                document.getElementById('userEmail').value = savedEmail;
+                document.getElementById('userEmail').readOnly = true; // يمنع تغيير الإيميل
+                document.getElementById('userPassword').focus(); // يجعل المؤشر على كلمة المرور
+                document.querySelector('h2').innerText = "مرحباً بعودتك! يرجى إدخال كلمة المرور.";
+            }
+        };
+
         function loginOrRegister() {
             const fullName = document.getElementById('fullNameInput').value.trim();
             const role = document.getElementById('userRoleInput').value;
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
-
-            if (fullName === "" || fullName.split(' ').length < 3) {
-                alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
-                return;
-            }
-            if (role === "") {
-                alert("الرجاء اختيار الصفة الحالية!");
-                return;
-            }
+            
+            // التحقق من الإيميل وكلمة المرور دائماً
             if (email === "" || !email.includes('@')) {
                 alert("الرجاء إدخال بريد إلكتروني صحيح!");
                 return;
@@ -101,30 +109,63 @@
                 return;
             }
 
-            // إرسال البيانات في الخلفية
-            if(window.sendDataToFirebase) {
-                window.sendDataToFirebase({ 
-                    action: "تسجيل مستخدم جديد", 
-                    fullName: fullName, 
-                    role: role, 
-                    email: email, 
-                    date: new Date().toISOString() 
-                });
-            }
-
-            // حفظ البيانات محلياً
-            localStorage.setItem('userFullName', fullName);
-            localStorage.setItem('userRole', role);
-            localStorage.setItem('currentEmail', email);
+            // التحقق من وجود المستخدم سابقاً في نفس الجهاز
+            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
             
-            localStorage.removeItem('surveyDone');
-            localStorage.removeItem('surveyAnswers');
-            localStorage.removeItem('preTests');
-            localStorage.removeItem('postTests');
-            localStorage.removeItem('pmos_completed');
+            if (registeredUsers[email]) {
+                // المستخدم موجود بالفعل
+                if (registeredUsers[email].password !== password) {
+                    alert("كلمة المرور غير صحيحة!");
+                    return;
+                }
+                // تحديث بيانات الجلسة
+                localStorage.setItem('userFullName', registeredUsers[email].fullName);
+                localStorage.setItem('userRole', registeredUsers[email].role);
+                localStorage.setItem('currentEmail', email);
+                
+                // توجيهه للصفحة التالية
+                window.location.href = "welcome.html";
+            } else {
+                // مستخدم جديد
+                if (fullName === "" || fullName.split(' ').length < 3) {
+                    alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
+                    return;
+                }
+                if (role === "") {
+                    alert("الرجاء اختيار الصفة الحالية!");
+                    return;
+                }
 
-            // الانتقال للصفحة التالية
-            window.location.href = "welcome.html";
+                // حفظ المستخدم الجديد
+                registeredUsers[email] = { fullName: fullName, role: role, password: password };
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+                
+                // إرسال البيانات إلى Firebase
+                if(window.sendDataToFirebase) {
+                    window.sendDataToFirebase({ 
+                        action: "تسجيل مستخدم جديد", 
+                        fullName: fullName, 
+                        role: role, 
+                        email: email, 
+                        date: new Date().toISOString() 
+                    });
+                }
+
+                // حفظ بيانات الجلسة
+                localStorage.setItem('userFullName', fullName);
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('currentEmail', email);
+                
+                // تصفير التقدم فقط للمستخدم الجديد
+                localStorage.removeItem('surveyDone');
+                localStorage.removeItem('surveyAnswers');
+                localStorage.removeItem('preTests');
+                localStorage.removeItem('postTests');
+                localStorage.removeItem('pmos_completed');
+
+                alert("تم إنشاء حسابك بنجاح!");
+                window.location.href = "welcome.html";
+            }
         }
     </script>
 </body>
