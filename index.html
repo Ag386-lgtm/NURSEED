@@ -3,58 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NURSEED | منصة التوعية الصحية</title>
+    <title>NURSEED | تسجيل الدخول</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="landing-body">
 
-    <!-- القائمة العلوية -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <span class="platform-name">NURSEED</span>
+    <div class="landing-container">
+        <div class="logo-area">
+            <h1 class="landing-title">NURSEED</h1>
+            <p class="landing-subtitle">Digital Health Awareness & Nursing Education Platform</p>
         </div>
-        <div class="user-info" id="userGreeting">منصة التوعية الصحية</div>
-    </nav>
-
-    <!-- الترحيب والتعريف -->
-    <header class="hero-section">
-        <h1>مرحباً بك في منصة NURSEED</h1>
-        <p class="hero-desc">
-            منصة علمية تهدف إلى نشر التوعية الصحية للمرأة من خلال فيديوهات تعليمية وأسئلة تقييمية. 
-            نهدف إلى توفير محتوى موثوق ومبسط يساعدك على فهم صحتك بشكل أفضل.
-        </p>
-    </header>
-
-    <!-- الأقسام -->
-    <section class="sections-container">
-        <h2 class="section-title">الأقسام العلمية</h2>
         
-        <div class="units-grid">
-            <!-- القسم الفعال (تكيس المبايض) -->
-            <a href="pmos.html" class="unit-card active-card">
-                <div class="card-icon">🩺</div>
-                <h3>متلازمة تكيس المبايض (PMOS)</h3>
-                <p>تعرفي على الأعراض، التشخيص، والعلاج من خلال 6 وحدات تفاعلية.</p>
-                <span class="start-btn">ابدأ التعلم</span>
-            </a>
+        <div class="landing-content">
+            <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
+            
+            <div class="login-form">
+                <input type="text" id="firstName" placeholder="الاسم الأول" required>
+                <input type="text" id="fatherName" placeholder="اسم الأب" required>
+                <input type="text" id="grandfatherName" placeholder="اسم الجد" required>
+                
+                <select id="userRoleInput">
+                    <option value="" disabled selected>اختر الصفة الحالية...</option>
+                    <option value="طالب جامعي">طالب جامعي</option>
+                    <option value="طالبة جامعية">طالبة جامعية</option>
+                    <option value="طالب مدرسي">طالب مدرسي</option>
+                    <option value="طالبة مدرسية">طالبة مدرسية</option>
+                    <option value="خريج جامعي">خريج جامعي</option>
+                    <option value="خريجة جامعية">خريجة جامعية</option>
+                    <option value="موظف">موظف</option>
+                    <option value="موظفة">موظفة</option>
+                    <option value="متقاعد">متقاعد</option>
+                    <option value="متقاعدة">متقاعدة</option>
+                    <option value="عمل حر">عمل حر</option>
+                    <option value="باحث أكاديمي">باحث أكاديمي</option>
+                    <option value="باحثة أكاديمية">باحثة أكاديمية</option>
+                    <option value="ربة منزل">ربة منزل</option>
+                    <option value="بدون عمل حالياً">بدون عمل حالياً</option>
+                    <option value="أخرى">أخرى</option>
+                </select>
 
-            <!-- أقسام فارغة (قريباً) -->
-            <div class="unit-card disabled-card">
-                <div class="card-icon">🔬</div>
-                <h3>بطانة الرحم المهاجرة</h3>
-                <p>قريباً...</p>
-                <span class="start-btn disabled">قريباً</span>
-            </div>
-
-            <div class="unit-card disabled-card">
-                <div class="card-icon">🧬</div>
-                <h3>أمراض الغدة الدرقية</h3>
-                <p>قريباً...</p>
-                <span class="start-btn disabled">قريباً</span>
+                <button class="main-btn" onclick="registerUser()">الدخول إلى المنصة</button>
             </div>
         </div>
-    </section>
+    </div>
 
+    <script>
+        function registerUser() {
+            const fName = document.getElementById('firstName').value.trim();
+            const faName = document.getElementById('fatherName').value.trim();
+            const gName = document.getElementById('grandfatherName').value.trim();
+            const role = document.getElementById('userRoleInput').value;
+
+            if (fName === "" || faName === "" || gName === "") {
+                alert("الرجاء إدخال الاسم الثلاثي (الاسم الأول، اسم الأب، اسم الجد)!");
+                return;
+            }
+            if (role === "") {
+                alert("الرجاء اختيار الصفة الحالية!");
+                return;
+            }
+
+            const fullName = `${fName} ${faName} ${gName}`;
+            localStorage.setItem('userFullName', fullName);
+            localStorage.setItem('userRole', role);
+
+            window.location.href = "welcome.html";
+        }
+    </script>
 </body>
 </html>
