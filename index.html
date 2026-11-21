@@ -7,8 +7,33 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- كود Pageclip Step 2 (الستايل) -->
-    <link rel="stylesheet" href="https://s.pageclip.co/v1/pageclip.css" media="screen">
+    <!-- 🔥 ربط Firebase (مدمج مباشرة) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoDLpvPnJ58aL8-pHwHtMBMgRdZY6NVgU",
+            authDomain: "nurseed-c2aa4.firebaseapp.com",
+            projectId: "nurseed-c2aa4",
+            storageBucket: "nurseed-c2aa4.firebasestorage.app",
+            messagingSenderId: "593899467317",
+            appId: "1:593899467317:web:ee5a1e029f0afeee70b77c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // دالة مخصصة للإرسال في الخلفية
+        window.sendDataToFirebase = async function(data) {
+            try {
+                await addDoc(collection(db, "nurseed_data"), data);
+                console.log("✅ تم الإرسال إلى Firebase بنجاح!");
+            } catch (error) {
+                console.error("❌ خطأ في الإرسال: ", error);
+            }
+        }
+    </script>
 </head>
 <body class="landing-body">
 
@@ -21,15 +46,11 @@
         <div class="landing-content">
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
-            <!-- تم تحويل الـ div إلى form ليتوافق مع Pageclip -->
-            <form class="login-form pageclip-form" 
-                  action="https://send.pageclip.co/YOUR_PAGECLIP_KEY" 
-                  method="post" 
-                  id="loginForm">
-                  
-                <input type="text" id="fullNameInput" name="fullName" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
+            <!-- تم إزالة action الخاص بـ Pageclip، أصبح النموذج عادياً -->
+            <div class="login-form">
+                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
                 
-                <select id="userRoleInput" name="role">
+                <select id="userRoleInput">
                     <option value="" disabled selected>اختر الصفة الحالية...</option>
                     <option value="طالب جامعي">طالب جامعي</option>
                     <option value="طالبة جامعية">طالبة جامعية</option>
@@ -49,61 +70,65 @@
                     <option value="أخرى">أخرى</option>
                 </select>
 
-                <input type="email" id="userEmail" name="email" placeholder="البريد الإلكتروني" required>
-                <input type="password" id="userPassword" name="password" placeholder="كلمة المرور" required>
+                <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+                <input type="password" id="userPassword" placeholder="كلمة المرور" required>
 
-                <!-- زر الإرسال الخاص بـ Pageclip -->
-                <button type="submit" class="main-btn pageclip-form__submit" style="position: relative;">
-                    <span>الدخول إلى المنصة</span>
-                </button>
-            </form>
-            
+                <button class="main-btn" onclick="loginOrRegister()">الدخول إلى المنصة</button>
+            </div>
         </div>
     </div>
 
-    <!-- كود Pageclip Step 1 (السكربت الأساسي) -->
-    <script src="https://s.pageclip.co/v1/pageclip.js" charset="utf-8"></script>
-
-    <!-- سكربت مخصص للتحقق من البيانات وتوجيه المستخدم -->
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            // التحقق من إدخال الاسم الثلاثي
+        function loginOrRegister() {
             const fullName = document.getElementById('fullNameInput').value.trim();
+            const role = document.getElementById('userRoleInput').value;
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
+
+            // 1. التحقق من البيانات
             if (fullName === "" || fullName.split(' ').length < 3) {
-                e.preventDefault(); // إيقاف الإرسال
                 alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
                 return;
             }
-
-            // التحقق من كلمة المرور
-            const password = document.getElementById('userPassword').value;
+            if (role === "") {
+                alert("الرجاء اختيار الصفة الحالية!");
+                return;
+            }
+            if (email === "" || !email.includes('@')) {
+                alert("الرجاء إدخال بريد إلكتروني صحيح!");
+                return;
+            }
             if (password.length < 4) {
-                e.preventDefault();
                 alert("كلمة المرور يجب أن تكون 4 أحرف على الأقل!");
                 return;
             }
 
-            // إذا كانت البيانات صحيحة، نسمح لـ Pageclip بالإرسال في الخلفية
-            // ونقوم بحفظ البيانات محلياً ونقل المستخدم فوراً
-            setTimeout(() => {
-                const role = document.getElementById('userRoleInput').value;
-                const email = document.getElementById('userEmail').value.trim();
-                
-                localStorage.setItem('userFullName', fullName);
-                localStorage.setItem('userRole', role);
-                localStorage.setItem('currentEmail', email);
-                
-                // تصفير البيانات القديمة للمستخدم الجديد
-                localStorage.removeItem('surveyDone');
-                localStorage.removeItem('surveyAnswers');
-                localStorage.removeItem('preTests');
-                localStorage.removeItem('postTests');
-                localStorage.removeItem('pmos_completed');
+            // 2. إرسال البيانات إلى Firebase (في الخلفية)
+            if(window.sendDataToFirebase) {
+                window.sendDataToFirebase({ 
+                    action: "تسجيل مستخدم جديد", 
+                    fullName: fullName, 
+                    role: role, 
+                    email: email, 
+                    date: new Date().toISOString() 
+                });
+            }
 
-                // الانتقال لصفحة الترحيب
-                window.location.href = "welcome.html";
-            }, 1000); // انتظار ثانية واحدة لضمان وصول البيانات لـ Pageclip
-        });
+            // 3. حفظ بيانات المستخدم في المتصفح
+            localStorage.setItem('userFullName', fullName);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('currentEmail', email);
+            
+            // تصفير التقدم القديم
+            localStorage.removeItem('surveyDone');
+            localStorage.removeItem('surveyAnswers');
+            localStorage.removeItem('preTests');
+            localStorage.removeItem('postTests');
+            localStorage.removeItem('pmos_completed');
+
+            // 4. الانتقال للصفحة التالية (دون انتظار رد Firebase لتجنب التعليق)
+            window.location.href = "welcome.html";
+        }
     </script>
 </body>
 </html>
