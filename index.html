@@ -7,32 +7,10 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- 🔥 ربط Firebase -->
+    <!-- 🔥 ربط Firebase (الملف الجديد) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCoDLpvPnJ58aL8-pHwHtMBMgRdZY6NVgU",
-            authDomain: "nurseed-c2aa4.firebaseapp.com",
-            projectId: "nurseed-c2aa4",
-            storageBucket: "nurseed-c2aa4.firebasestorage.app",
-            messagingSenderId: "593899467317",
-            appId: "1:593899467317:web:ee5a1e029f0afeee70b77c"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // دالة لإرسال البيانات لـ Firebase
-        window.saveToFirebase = async function(data) {
-            try {
-                await addDoc(collection(db, "nurseed_data"), data);
-                console.log("تم الحفظ في Firebase بنجاح");
-            } catch (e) {
-                console.error("خطأ في الحفظ: ", e);
-            }
-        }
+        import { saveToFirebase } from './firebase-config.js';
+        window.saveToFirebase = saveToFirebase; 
     </script>
 </head>
 <body class="landing-body">
@@ -123,9 +101,15 @@
                 localStorage.removeItem('postTests');
                 localStorage.removeItem('pmos_completed');
                 
-                // إرسال بيانات التسجيل لج
+                // إرسال بيانات التسجيل لـ Firebase
                 if(window.saveToFirebase) {
-                    window.saveToFirebase({ action: "تسجيل مستخدم جديد", fullName: fullName, role: role, email: email, date: new Date().toISOString() });
+                    window.saveToFirebase({ 
+                        action: "تسجيل مستخدم جديد", 
+                        fullName: fullName, 
+                        role: role, 
+                        email: email, 
+                        date: new Date().toISOString() 
+                    });
                 }
                 
                 alert("تم إنشاء حساب جديد بنجاح!");
