@@ -1,10 +1,14 @@
+// ==========================================
 // 1. إدارة حساب المستخدم بناءً على الإيميل
+// ==========================================
 const currentEmail = localStorage.getItem('currentEmail');
 if (!currentEmail) {
     window.location.href = "index.html"; // إذا ماكو إيميل مسجل، يرجعه للدخول
 }
 
-// 2. البيانات (الاستبيان والوحدات)
+// ==========================================
+// 2. بيانات الاستبيان والوحدات
+// ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
     { q: "2. المستوى التعليمي:", type: "select", options: ["غير متعلم", "إعدادية أو أقل", "دبلوم", "بكالوريوس", "دراسات عليا"] },
@@ -134,7 +138,9 @@ let currentUnit = 0;
 let player = null;
 let isReviewing = false;
 
+// ==========================================
 // 3. الأزرار والمشاركة والوضع الليلي
+// ==========================================
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 function agreeCertificate() { localStorage.setItem('certificateAgreed', 'true'); alert("تم التسجيل! بالتوفيق في رحلتك التعليمية."); }
@@ -149,15 +155,15 @@ function shareLink(pageUrl, titleText) {
     }
 }
 
+// ==========================================
 // 4. تشغيل الصفحة
+// ==========================================
 window.onload = function() {
-    // تحديث اسم المستخدم في الهيدر
     const name = localStorage.getItem('userFullName');
     const role = localStorage.getItem('userRole');
     const greetingEl = document.getElementById('welcomeText');
     if (greetingEl && name && role) greetingEl.innerText = `مرحباً، ${role} ${name}`;
 
-    // إذا كنا في صفحة الوحدات (pmos.html) نشغل باقي الكود
     if(!document.getElementById('surveyContainer')) return;
 
     const isSurveyDone = localStorage.getItem('surveyDone');
@@ -175,7 +181,9 @@ window.onload = function() {
     }
 };
 
+// ==========================================
 // 5. الاستبيان
+// ==========================================
 function renderSurvey() {
     const container = document.getElementById('surveyQuestions');
     let html = "";
@@ -199,6 +207,10 @@ function submitSurvey() {
         answers[`Q${i+1}`] = document.getElementById(`survey_${i}`).value;
     }
     localStorage.setItem('surveyAnswers', JSON.stringify(answers));
+    
+    // 🔴 كود إرسال الاستبيان لج (يفعل لاحقاً)
+    // window.sendToFirebase({ action: "تسجيل جديد", name: localStorage.getItem('userFullName'), email: localStorage.getItem('currentEmail'), date: new Date().toISOString() });
+
     alert("شكراً لك! تم استلام إجاباتك. تظهر الوحدات الآن.");
     localStorage.setItem('surveyDone', 'true');
     document.getElementById('surveyContainer').style.display = 'none';
@@ -207,7 +219,9 @@ function submitSurvey() {
     updateProgress();
 }
 
+// ==========================================
 // 6. الوحدات
+// ==========================================
 function renderUnits() {
     const grid = document.getElementById('unitsGrid');
     let html = "";
@@ -234,16 +248,45 @@ function openUnit(unitId, reviewMode) {
 
     if(isReviewing) {
         let postData = JSON.parse(localStorage.getItem('postTests')) || {};
+        let preData = JSON.parse(localStorage.getItem('preTests')) || {};
+        
+        // إظهار قسم الفيديو
         document.getElementById('videoSection').style.display = 'block';
         document.getElementById('popupTitle').innerText = `مراجعة: ${data.title}`;
         document.getElementById('videoStatus').innerText = "✅ لقد أكملت هذه الوحدة مسبقاً. هذه مراجعة فقط.";
         document.getElementById('videoStatus').style.color = "#4caf50";
+
+        // إظهار النتيجة والإجابات السابقة بالتفصيل
         const resultText = document.getElementById('resultText');
+        let reviewHtml = "";
+        
         if(postData[unitId]) {
-            resultText.innerHTML = `<h4>نتيجتك السابقة:</h4><p>${postData[unitId].score} من ${postData[unitId].total}</p>`;
+            reviewHtml += `<h4 style="color: var(--primary); margin-bottom: 15px;">نتيجتك السابقة: ${postData[unitId].score} من ${postData[unitId].total}</h4>`;
+            reviewHtml += `<h4 style="color: var(--primary); margin-top: 20px;">تفاصيل إجاباتك:</h4>`;
+            
+            data.postTest.forEach((q, idx) => {
+                const userAnswer = postData[unitId].answers[idx];
+                const isCorrect = userAnswer === q.correct;
+                const color = isCorrect ? "green" : "red";
+                const icon = isCorrect ? "✅" : "❌";
+                
+                reviewHtml += `<div style="text-align: right; margin-bottom: 15px; padding: 15px; background: #f9f9f9; border-radius: 10px; border-right: 4px solid ${color}; color: #333;">
+                    <strong>${idx+1}. ${q.q}</strong><br>
+                    <span style="color: ${color}; font-weight: bold;">${icon} إجابتك: ${q.options[userAnswer]}</span><br>`;
+                
+                if (!isCorrect) {
+                    reviewHtml += `<span style="color: green; font-weight: bold;">✔️ الإجابة الصحيحة: ${q.options[q.correct]}</span>`;
+                }
+                reviewHtml += `</div>`;
+            });
+        } else {
+            reviewHtml = "<p>لم يتم العثور على إجابات سابقة.</p>";
         }
+        
+        resultText.innerHTML = reviewHtml;
         document.getElementById('resultSection').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'none'; 
+        
         startYoutubePlayer(data.videoId);
     } else {
         if(!localStorage.getItem('certificateAgreed')) {
@@ -340,6 +383,10 @@ function submitPostTest() {
     let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
     allPost[currentUnit] = { answers: postAnswers, score: score, total: data.postTest.length };
     localStorage.setItem('postTests', JSON.stringify(allPost));
+
+    // 🔴 كود إرسال النتيجة لج (يفعل لاحقاً)
+    // window.sendToFirebase({ action: "إنهاء وحدة", name: localStorage.getItem('userFullName'), email: localStorage.getItem('currentEmail'), unit: currentUnit, score: score, total: data.postTest.length, date: new Date().toISOString() });
+
     document.getElementById('postTestSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
     const resultText = document.getElementById('resultText');
@@ -399,4 +446,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-    }
+                }
