@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائجي | NURSEED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><h2>NURSEED</h2><p>Learn • Care • Heal</p></div>
+        <nav class="sidebar-nav">
+            <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="pmos.html"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
+            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر</a>
+            <a href="results.html" class="active"><i class="fas fa-chart-bar"></i> نتائجي</a>
+            <a href="certificates.html"><i class="fas fa-certificate"></i> شهاداتي</a>
+            <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <h1 style="color: var(--primary); margin-bottom: 20px;">نتائجي وتقدمي</h1>
+        <div id="resultsContainer" class="content-section">
+            <!-- سيتم تعبئتها عبر الجافاسكريبت -->
+        </div>
+    </main>
+    <script>
+        window.onload = function() {
+            const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
+            const postTests = JSON.parse(localStorage.getItem('postTests')) || {};
+            const resultsDiv = document.getElementById('resultsContainer');
+            
+            let html = `<h2>ملخص تقدمك في قسم تكيس المبايض (PCOS)</h2>`;
+            html += `<p>لقد أكملت <strong>${completed.length}</strong> من أصل 6 وحدات.</p>`;
+            
+            html += `<table style="width:100%; border-collapse: collapse; margin-top: 20px; text-align: right;">
+                        <tr style="background: var(--primary); color: white;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">الوحدة</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">النتيجة (البعدي)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">الحالة</th>
+                        </tr>`;
+            
+            for(let i=1; i<=6; i++) {
+                let status = completed.includes(i) ? "مكتملة ✅" : "لم تبدأ ❌";
+                let score = postTests[i] ? `${postTests[i].score} / ${postTests[i].total}` : "-";
+                html += `<tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 10px; border: 1px solid #ddd;">الوحدة ${i}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">${score}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">${status}</td>
+                        </tr>`;
+            }
+            html += `</table>`;
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
