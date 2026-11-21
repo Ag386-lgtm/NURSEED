@@ -19,7 +19,7 @@
 
     <section class="topic-header">
         <h2>متلازمة تكيس المبايض (PCOS)</h2>
-        <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض. يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة.</p>
+        <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
         
         <div class="progress-container">
             <div class="progress-info">
@@ -33,9 +33,17 @@
         </div>
     </section>
 
-    <main class="units-grid">
-        <!-- سيتم توليد الوحدات هنا عبر الجافاسكريبت -->
-        <div id="unitsContainer" class="units-grid"></div>
+    <!-- 1. الاستبيان الديموغرافي (يظهر مرة واحدة فقط) -->
+    <div id="surveyContainer" class="content-section" style="max-width: 800px; margin: 20px auto;">
+        <h2>الاستبيان القبلي (المعلومات العامة)</h2>
+        <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة. (لن يتم تصحيحها فورياً، بل ترسل للإدارة).</p>
+        <div id="surveyQuestions"></div>
+        <button class="main-btn" onclick="submitSurvey()" style="margin-top: 20px;">إرسال الاستبيان وفتح الوحدات</button>
+    </div>
+
+    <!-- 2. الوحدات (مخفية حتى يتم إرسال الاستبيان) -->
+    <main class="units-grid" id="unitsGrid" style="display: none;">
+        <!-- يتم توليدها بالجافاسكربت -->
     </main>
 
     <!-- 🌟 النافذة المنبثقة للاختبار والفيديو -->
@@ -43,15 +51,15 @@
         <div class="modal-box">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             
-            <!-- قسم الاختبار القبلي -->
+            <!-- الاختبار القبلي -->
             <div id="preTestSection">
                 <h3 id="preTestTitle">الاختبار القبلي</h3>
-                <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية.</p>
+                <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية. (لن يتم تصحيحها فورياً).</p>
                 <div id="preQuizContent"></div>
                 <button class="main-btn" onclick="submitPreTest()">إرسال الإجابات وعرض الفيديو</button>
             </div>
 
-            <!-- قسم الفيديو -->
+            <!-- الفيديو -->
             <div id="videoSection" style="display: none;">
                 <h3 id="popupTitle">عنوان الوحدة</h3>
                 <div class="video-wrapper">
@@ -60,7 +68,7 @@
                 <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...</div>
             </div>
 
-            <!-- قسم الاختبار البعدي -->
+            <!-- الاختبار البعدي -->
             <div id="postTestSection" style="display: none;">
                 <h3>الاختبار البعدي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس مدى اكتسابك للمعلومات.</p>
@@ -68,7 +76,7 @@
                 <button class="main-btn" onclick="submitPostTest()">إرسال الإجابات</button>
             </div>
 
-            <!-- قسم النتيجة -->
+            <!-- النتيجة والشهادة -->
             <div id="resultSection" style="display: none; text-align: center;">
                 <h3>النتيجة</h3>
                 <div id="resultText" class="result-text"></div>
