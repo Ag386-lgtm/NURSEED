@@ -26,17 +26,17 @@
 
         // دالة البحث عن مستخدم في Firebase
         window.checkUserInFirebase = async function(email) {
-            const usersRef = collection(db, "nurseed_users");
+            const usersRef = collection(db, "nurseed_users"); // مجموعة المستخدمين
             const q = query(usersRef, where("email", "==", email));
             const querySnapshot = await getDocs(q);
             
             if (!querySnapshot.empty) {
-                return querySnapshot.docs[0].data();
+                return querySnapshot.docs[0].data(); // إذا وجد المستخدم نرجع بياناته
             }
-            return null;
+            return null; // إذا لم يوجد
         }
 
-        // دالة حفظ مستخدم جديد
+        // دالة حفظ مستخدم جديد في Firebase
         window.saveUserToFirebase = async function(userData) {
             try {
                 await addDoc(collection(db, "nurseed_users"), userData);
@@ -56,10 +56,10 @@
         </div>
         
         <div class="landing-content">
-            <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
+            <h2 id="welcomeMessage">مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <!-- أبقينا الحقول ظاهرة دائماً لتجنب مشكلة اختفاء الاسم -->
+                <!-- حقول الاسم والصفة (تظهر دائماً لتجنب الأخطاء) -->
                 <div id="newUserFields">
                     <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
                     <select id="userRoleInput">
@@ -92,9 +92,13 @@
     </div>
 
     <script>
-        // إزالة كود إخفاء الحقول عند التحميل لمنع الخطأ
+        // عند فتح الصفحة، نقوم بتعبئة الإيميل تلقائياً إذا كان محفوظاً في المتصفح
         window.onload = function() {
-            // لا نقوم بإخفاء أي حقول، لكي يتمكن المستخدم من كتابتها إذا لزم الأمر
+            const savedEmail = localStorage.getItem('currentEmail');
+            if (savedEmail) {
+                document.getElementById('userEmail').value = savedEmail;
+                document.getElementById('welcomeMessage').innerText = "مرحباً بعودتك! أدخل كلمة المرور للمتابعة";
+            }
         };
 
         function loginOrRegister() {
@@ -103,6 +107,7 @@
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
             
+            // تحقق أساسي
             if (email === "" || !email.includes('@')) {
                 alert("الرجاء إدخال بريد إلكتروني صحيح!");
                 return;
@@ -112,21 +117,27 @@
                 return;
             }
 
-            // البحث في Firebase
+            // 1. البحث في Firebase
             if(window.checkUserInFirebase) {
                 window.checkUserInFirebase(email).then(user => {
+                    
+                    // الحالة الأولى: المستخدم موجود في قاعدة البيانات (حساب قديم)
                     if (user) {
-                        // المستخدم موجود في Firebase (حساب قديم)
                         if (user.password !== password) {
                             alert("كلمة المرور غير صحيحة!");
                             return;
                         }
+                        
+                        // تسجيل الدخول بنجاح
                         localStorage.setItem('userFullName', user.fullName);
                         localStorage.setItem('userRole', user.role);
                         localStorage.setItem('currentEmail', email);
                         window.location.href = "welcome.html";
+                    
+                    // الحالة الثانية: المستخدم غير موجود (حساب جديد)
                     } else {
-                        // مستخدم جديد (لم نجده في Firebase)
+                        
+                        // التحقق من الاسم والصفة للمستخدم الجديد
                         if (fullName === "" || fullName.split(' ').length < 3) {
                             alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
                             return;
@@ -136,18 +147,19 @@
                             return;
                         }
 
-                        const newUser = { fullName, role, email, password, date: new Date().toISOString() };
+                        // حفظ المستخدم الجديد
+                        const newUser = { fullName: fullName, role: role, email: email, password: password, date: new Date().toISOString() };
                         
-                        // حفظ المستخدم الجديد في Firebase
                         if(window.saveUserToFirebase) {
                             window.saveUserToFirebase(newUser);
                         }
 
+                        // تسجيل الدخول
                         localStorage.setItem('userFullName', fullName);
                         localStorage.setItem('userRole', role);
                         localStorage.setItem('currentEmail', email);
                         
-                        // تصفير التقدم
+                        // مسح أي تقدم قديم (لأنه مستخدم جديد)
                         localStorage.removeItem('surveyDone');
                         localStorage.removeItem('surveyAnswers');
                         localStorage.removeItem('preTests');
