@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شهاداتي | NURSEED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body class="dashboard-body">
+    <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo"><h2>NURSEED</h2><p>Learn • Care • Heal</p></div>
+        <nav class="sidebar-nav">
+            <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="pmos.html"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
+            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر</a>
+            <a href="results.html"><i class="fas fa-chart-bar"></i> نتائجي</a>
+            <a href="certificates.html" class="active"><i class="fas fa-certificate"></i> شهاداتي</a>
+            <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <h1 style="color: var(--primary); margin-bottom: 20px;">شهاداتي</h1>
+        <div id="certificatesContainer" class="content-section">
+            <!-- سيتم تعبئتها عبر الجافاسكريبت -->
+        </div>
+    </main>
+    <script>
+        window.onload = function() {
+            const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
+            const container = document.getElementById('certificatesContainer');
+            
+            if(completed.length === 6) {
+                const name = localStorage.getItem('userFullName') || "طالب";
+                const role = localStorage.getItem('userRole') || "متعلم";
+                
+                let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
+                let totalScore = 0; let totalQuestions = 0;
+                for(let i=1; i<=6; i++) {
+                    if(allPost[i]) {
+                        totalScore += allPost[i].score;
+                        totalQuestions += allPost[i].total;
+                    }
+                }
+                let percentage = Math.round((totalScore / totalQuestions) * 100);
+
+                container.innerHTML = `
+                    <div class="certificate" id="certificateToShare">
+                        <h1>شهادة إنجاز</h1>
+                        <h2>NURSEED - منصة التوعية الصحية</h2>
+                        <p>تشهد المنصة بأن</p>
+                        <div class="name">${role} ${name}</div>
+                        <p>قد أكمل بنجاح جميع الوحدات التعليمية لقسم متلازمة تكيس المبايض (PCOS).</p>
+                        <p>بمعدل نهائي: <strong>${percentage}%</strong></p>
+                        <div class="footer">
+                            <div><p>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</p></div>
+                            <div><p>مديرة المنصة</p><p>althlath046@gmail.com</p></div>
+                        </div>
+                        <p style="font-size: 0.8em; color: #666; margin-top: 20px;">تحقق من شهادتك على: ${window.location.origin}</p>
+                    </div>
+                    <button class="main-btn" onclick="shareCertificate()" style="margin-top: 20px; background: var(--gold); color: #000;">
+                        <i class="fas fa-share-alt"></i> مشاركة الشهادة كصورة
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <h2>لم تكمل جميع الوحدات بعد!</h2>
+                    <p>لإكمال الحصول على الشهادة، يجب عليك إنهاء جميع الوحدات الستة في قسم تكيس المبايض.</p>
+                    <a href="pmos.html" class="main-btn" style="display: inline-block; width: auto; margin-top: 15px;">الانتقال إلى الوحدات</a>
+                `;
+            }
+        }
+
+        function shareCertificate() {
+            const cert = document.getElementById('certificateToShare');
+            html2canvas(cert).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], 'NURSEED-Certificate.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'شهادة إنجاز NURSEED',
+                            text: 'أنا فخور بإكمال رحلتي التعليمية في منصة NURSEED!'
+                        }).catch(console.error);
+                    } else {
+                        // إذا المتصفح ما يدعم المشاركة المباشرة، يحمل الصورة
+                        const link = document.createElement('a');
+                        link.download = 'NURSEED-Certificate.png';
+                        link.href = canvas.toDataURL();
+                        link.click();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
