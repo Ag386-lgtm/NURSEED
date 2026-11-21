@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- 🔥 ربط Firebase (مدمج مباشرة) -->
+    <!-- 🔥 ربط Firebase الخاص بك -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -24,7 +24,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // دالة مخصصة للإرسال في الخلفية
         window.sendDataToFirebase = async function(data) {
             try {
                 await addDoc(collection(db, "nurseed_data"), data);
@@ -46,7 +45,6 @@
         <div class="landing-content">
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
-            <!-- تم إزالة action الخاص بـ Pageclip، أصبح النموذج عادياً -->
             <div class="login-form">
                 <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
                 
@@ -85,7 +83,6 @@
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
 
-            // 1. التحقق من البيانات
             if (fullName === "" || fullName.split(' ').length < 3) {
                 alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
                 return;
@@ -103,7 +100,7 @@
                 return;
             }
 
-            // 2. إرسال البيانات إلى Firebase (في الخلفية)
+            // إرسال البيانات في الخلفية (لن يظهر أي خطأ)
             if(window.sendDataToFirebase) {
                 window.sendDataToFirebase({ 
                     action: "تسجيل مستخدم جديد", 
@@ -114,19 +111,19 @@
                 });
             }
 
-            // 3. حفظ بيانات المستخدم في المتصفح
+            // حفظ بيانات المستخدم محلياً
             localStorage.setItem('userFullName', fullName);
             localStorage.setItem('userRole', role);
             localStorage.setItem('currentEmail', email);
             
-            // تصفير التقدم القديم
+            // مسح التقدم القديم
             localStorage.removeItem('surveyDone');
             localStorage.removeItem('surveyAnswers');
             localStorage.removeItem('preTests');
             localStorage.removeItem('postTests');
             localStorage.removeItem('pmos_completed');
 
-            // 4. الانتقال للصفحة التالية (دون انتظار رد Firebase لتجنب التعليق)
+            // الانتقال للصفحة التالية فوراً
             window.location.href = "welcome.html";
         }
     </script>
