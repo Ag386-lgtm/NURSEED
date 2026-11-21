@@ -3,17 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شهاداتي | NURSEED</title>
-    <!-- تم تحديث اسم ملف التصميم -->
+    <title>شهادتي | NURSEED</title>
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- مكتبة لتحويل الشهادة إلى صورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        .certificate-container {
+            background: #fff;
+            border: 10px solid var(--primary);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            max-width: 800px;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .cert-logo { font-size: 2em; color: var(--primary); font-weight: bold; margin-bottom: 10px; }
+        .cert-title { font-size: 2.5em; color: #333; margin: 20px 0; }
+        .cert-name { font-size: 2em; color: var(--gold); font-weight: bold; margin: 20px 0; border-bottom: 2px dashed #ccc; display: inline-block; padding-bottom: 5px; }
+        .cert-text { font-size: 1.2em; color: #555; line-height: 1.8; }
+        .cert-footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #777; }
+        .cert-link { color: var(--primary); text-decoration: none; font-weight: bold; }
+        .actions { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;}
+        .actions button { width: auto; padding: 10px 30px; cursor: pointer; border: none; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1.1em; transition: 0.3s; }
+        .btn-download { background: var(--success); color: white; }
+        .btn-share { background: var(--primary); color: white; }
+        .btn-download:hover, .btn-share:hover { opacity: 0.8; }
+    </style>
 </head>
 <body class="dashboard-body">
+
     <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo"><h2>NURSEED</h2><p>Learn • Care • Heal</p></div>
+        <div class="sidebar-logo">
+            <h2>NURSEED</h2>
+            <p>Learn • Care • Heal</p>
+        </div>
         <nav class="sidebar-nav">
             <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
             <a href="pmos.html"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
@@ -23,77 +52,97 @@
             <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
         </nav>
     </aside>
+
     <main class="main-content">
-        <h1 style="color: var(--primary); margin-bottom: 20px;">شهاداتي</h1>
-        <div id="certificatesContainer" class="content-section">
-            <!-- سيتم تعبئتها عبر الجافاسكريبت -->
+        <div id="certificateArea" class="certificate-container">
+            <div class="cert-logo">NURSEED</div>
+            <div class="cert-title">شهادة إنجاز</div>
+            <p class="cert-text">تُمنح هذه الشهادة إلى</p>
+            
+            <!-- سيتم وضع اسم الطالب هنا ديناميكياً -->
+            <div class="cert-name" id="studentName">اسم الطالب</div>
+            
+            <p class="cert-text">وذلك لإتمامه بنجاح جميع وحدات المسار التعليمي لمتلازمة تكيس المبايض (PCOS) على منصة NURSEED.</p>
+            
+            <div class="cert-footer">
+                <div style="text-align: right;">
+                    <p>التاريخ: <span id="certDate"></span></p>
+                    <p>الصفة: <span id="studentRole"></span></p>
+                </div>
+                <div style="text-align: left;">
+                    <p>رابط المنصة للتوثيق:</p>
+                    <!-- رابط المنصة -->
+                    <a href="https://ag386-lgtm.github.io/NURSEED/" class="cert-link">https://ag386-lgtm.github.io/NURSEED/</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-download" onclick="downloadCertificate()"><i class="fas fa-download"></i> تحميل الشهادة كصورة</button>
+            <button class="btn-share" onclick="shareCertificate()"><i class="fas fa-share-alt"></i> مشاركة الشهادة</button>
         </div>
     </main>
-    <script>
-        window.onload = function() {
-            const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
-            const container = document.getElementById('certificatesContainer');
-            
-            if(completed.length === 6) {
-                const name = localStorage.getItem('userFullName') || "طالب";
-                const role = localStorage.getItem('userRole') || "متعلم";
-                
-                let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
-                let totalScore = 0; let totalQuestions = 0;
-                for(let i=1; i<=6; i++) {
-                    if(allPost[i]) {
-                        totalScore += allPost[i].score;
-                        totalQuestions += allPost[i].total;
-                    }
-                }
-                let percentage = Math.round((totalScore / totalQuestions) * 100);
 
-                container.innerHTML = `
-                    <div class="certificate" id="certificateToShare">
-                        <h1>شهادة إنجاز</h1>
-                        <h2>NURSEED - منصة التوعية الصحية</h2>
-                        <p>تشهد المنصة بأن</p>
-                        <div class="name">${role} ${name}</div>
-                        <p>قد أكمل بنجاح جميع الوحدات التعليمية لقسم متلازمة تكيس المبايض (PCOS).</p>
-                        <p>بمعدل نهائي: <strong>${percentage}%</strong></p>
-                        <div class="footer">
-                            <div><p>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</p></div>
-                            <div><p>مديرة المنصة</p><p>althlath046@gmail.com</p></div>
-                        </div>
-                        <p style="font-size: 0.8em; color: #666; margin-top: 20px;">تحقق من شهادتك على: ${window.location.origin}</p>
-                    </div>
-                    <button class="main-btn" onclick="shareCertificate()" style="margin-top: 20px; background: var(--gold); color: #000;">
-                        <i class="fas fa-share-alt"></i> مشاركة الشهادة كصورة
-                    </button>
-                `;
-            } else {
-                container.innerHTML = `
-                    <h2>لم تكمل جميع الوحدات بعد!</h2>
-                    <p>لإكمال الحصول على الشهادة، يجب عليك إنهاء جميع الوحدات الستة في قسم تكيس المبايض.</p>
-                    <a href="pmos.html" class="main-btn" style="display: inline-block; width: auto; margin-top: 15px;">الانتقال إلى الوحدات</a>
-                `;
+    <script>
+        // 1. جلب بيانات المستخدم وعرضها في الشهادة
+        window.onload = function() {
+            const name = localStorage.getItem('userFullName');
+            const role = localStorage.getItem('userRole');
+            const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
+
+            // التحقق من أن المستخدم أكمل جميع الوحدات
+            if (completed.length < 6) {
+                alert("عذراً، يجب عليك إكمال جميع الوحدات الستة أولاً للحصول على الشهادة.");
+                window.location.href = "pmos.html";
+                return;
             }
+
+            if(name && role) {
+                document.getElementById('studentName').innerText = name;
+                document.getElementById('studentRole').innerText = role;
+            } else {
+                window.location.href = "index.html";
+            }
+
+            // إضافة تاريخ اليوم
+            const today = new Date();
+            const dateStr = today.getFullYear() + "/" + (today.getMonth()+1) + "/" + today.getDate();
+            document.getElementById('certDate').innerText = dateStr;
         }
 
-        function shareCertificate() {
-            const cert = document.getElementById('certificateToShare');
-            html2canvas(cert).then(canvas => {
-                canvas.toBlob(blob => {
-                    const file = new File([blob], 'NURSEED-Certificate.png', { type: 'image/png' });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            files: [file],
-                            title: 'شهادة إنجاز NURSEED',
-                            text: 'أنا فخور بإكمال رحلتي التعليمية في منصة NURSEED!'
-                        }).catch(console.error);
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'NURSEED-Certificate.png';
-                        link.href = canvas.toDataURL();
-                        link.click();
-                    }
-                });
+        // 2. دالة تحميل الشهادة كصورة
+        function downloadCertificate() {
+            const certElement = document.getElementById('certificateArea');
+            
+            // استخدام مكتبة html2canvas لتحويل الشهادة إلى صورة
+            html2canvas(certElement, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'NURSEED_Certificate.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             });
+        }
+
+        // 3. دالة مشاركة الشهادة (مشاركة الرابط مع رسالة)
+        function shareCertificate() {
+            const name = localStorage.getItem('userFullName');
+            const platformUrl = "https://ag386-lgtm.github.io/NURSEED/";
+            
+            const shareText = `أنا ${name}، أتممت بنجاح المسار التعليمي لمتلازمة تكيس المبايض على منصة NURSEED! 🎓\nيمكنكم زيارة المنصة عبر الرابط:`;
+            
+            if (navigator.share) {
+                // إذا كان الجهاز يدعم المشاركة (مثل الهواتف)
+                navigator.share({
+                    title: 'شهادة إنجاز من NURSEED',
+                    text: shareText,
+                    url: platformUrl
+                }).catch(console.error);
+            } else {
+                // إذا كان على كمبيوتر، نقوم بنسخ النص
+                const fullText = shareText + " " + platformUrl;
+                navigator.clipboard.writeText(fullText);
+                alert("تم نسخ تفاصيل الشهادة ورابط المنصة بنجاح! يمكنك لصقها في أي مكان.");
+            }
         }
     </script>
 </body>
