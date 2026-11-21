@@ -19,10 +19,10 @@
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <input type="text" id="firstName" placeholder="الاسم الأول" required>
-                <input type="text" id="fatherName" placeholder="اسم الأب" required>
-                <input type="text" id="grandfatherName" placeholder="اسم الجد" required>
+                <!-- الخانة الأولى: الاسم الثلاثي -->
+                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
                 
+                <!-- الخانة الثانية: الصفة -->
                 <select id="userRoleInput">
                     <option value="" disabled selected>اختر الصفة الحالية...</option>
                     <option value="طالب جامعي">طالب جامعي</option>
@@ -43,25 +43,26 @@
                     <option value="أخرى">أخرى</option>
                 </select>
 
+                <!-- الخانة الثالثة: الإيميل -->
                 <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+                
+                <!-- الخانة الرابعة: الباسورد -->
                 <input type="password" id="userPassword" placeholder="كلمة المرور" required>
 
-                <button class="main-btn" onclick="registerUser()">الدخول إلى المنصة</button>
+                <button class="main-btn" onclick="loginOrRegister()">الدخول إلى المنصة</button>
             </div>
         </div>
     </div>
 
     <script>
-        function registerUser() {
-            const fName = document.getElementById('firstName').value.trim();
-            const faName = document.getElementById('fatherName').value.trim();
-            const gName = document.getElementById('grandfatherName').value.trim();
+        function loginOrRegister() {
+            const fullName = document.getElementById('fullNameInput').value.trim();
             const role = document.getElementById('userRoleInput').value;
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
 
-            if (fName === "" || faName === "" || gName === "") {
-                alert("الرجاء إدخال الاسم الثلاثي!");
+            if (fullName === "" || fullName.split(' ').length < 3) {
+                alert("الرجاء إدخال الاسم الثلاثي كاملاً (3 مقاطع على الأقل)!");
                 return;
             }
             if (role === "") {
@@ -77,26 +78,36 @@
                 return;
             }
 
-            const fullName = `${fName} ${faName} ${gName}`;
+            // جلب قائمة المستخدمين المسجلين سابقاً (عشان نعرف إذا الإيميل جديد أو قديم)
+            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
             
-            localStorage.setItem('userFullName', fullName);
-            localStorage.setItem('userRole', role);
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userPassword', password);
-
-            // التحقق من الإيميل لمنع تشابه الأسماء
-            const lastUserEmail = localStorage.getItem('lastLoggedUserEmail');
-            
-            if (email !== lastUserEmail) {
-                // إيميل جديد = تصفير كل شيء
+            // إذا الإيميل موجود مسبقاً، نتحقق من الباسورد
+            if (registeredUsers[email]) {
+                if (registeredUsers[email].password !== password) {
+                    alert("كلمة المرور غير صحيحة لهذا البريد الإلكتروني!");
+                    return;
+                }
+                // إذا الإيميل قديم، نستدعي بياناته المحفوظة
+                localStorage.setItem('userFullName', registeredUsers[email].fullName);
+                localStorage.setItem('userRole', registeredUsers[email].role);
+            } else {
+                // إذا الإيميل جديد، نسجله ونمسح أي بيانات قديمة في المتصفح (نبدأ من الصفر)
+                registeredUsers[email] = { fullName: fullName, role: role, password: password };
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+                
+                localStorage.setItem('userFullName', fullName);
+                localStorage.setItem('userRole', role);
+                
+                // تصفير كل شيء لهذا المستخدم الجديد
                 localStorage.removeItem('surveyDone');
                 localStorage.removeItem('surveyAnswers');
                 localStorage.removeItem('preTests');
                 localStorage.removeItem('postTests');
                 localStorage.removeItem('pmos_completed');
-                localStorage.setItem('lastLoggedUserEmail', email);
+                alert("تم إنشاء حساب جديد بنجاح! أهلاً بك في رحلتك.");
             }
 
+            localStorage.setItem('currentEmail', email);
             window.location.href = "welcome.html";
         }
     </script>
