@@ -6,22 +6,62 @@
     <title>PMOS - NURSEED</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
-<body>
+<body class="dashboard-body">
 
-    <nav class="navbar">
-        <div class="logo-container">
-            <a href="welcome.html" class="back-home"><i class="fas fa-arrow-right"></i> الرئيسية</a>
-            <span class="platform-name">NURSEED</span>
+    <!-- زر إظهار/إخفاء الشريط الجانبي للموبايل -->
+    <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h2>NURSEED</h2>
+            <p>Learn • Care • Heal</p>
         </div>
-    </nav>
+        <nav class="sidebar-nav">
+            <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="pmos.html" class="active"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
+            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر</a>
+            <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+        </nav>
+    </aside>
 
-    <section class="topic-header">
-        <h2>متلازمة تكيس المبايض (PCOS)</h2>
-        <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
         
-        <div class="progress-container">
+        <!-- معلومات القسم التعريفية -->
+        <section class="content-section">
+            <h2>متلازمة تكيس المبايض (PCOS)</h2>
+            <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
+            <p>يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم متلازمة تكيس المبايض، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها، بالإضافة إلى فهم تأثيراتها الهرمونية والأيضية في جسم المرأة.</p>
+            <p>يتكوّن هذا القسم من ست وحدات تعليمية مترابطة، صُمّمت لتقديم المعلومات بصورة منظمة وتفاعلية، من خلال الفيديوهات التعليمية والاختبارات الإلكترونية.</p>
+            
+            <h3 style="margin-top: 20px; color: var(--primary);">ماذا ستتعلم في هذا القسم؟</h3>
+            <ol style="margin-top: 10px;">
+                <li>المعرفة العامة بمتلازمة تكيس المبايض: فهم مفهوم المتلازمة وطبيعتها والعوامل المرتبطة بها.</li>
+                <li>العلامات والأعراض: التعرّف على أبرز العلامات والأعراض المصاحبة للمتلازمة.</li>
+                <li>التشخيص والفحوصات: معرفة الأساليب والفحوصات المستخدمة في تشخيص الحالة.</li>
+                <li>الرعاية والعلاج: التعرّف على أساليب الرعاية والتدبير العلاجي.</li>
+                <li>التأثيرات الهرمونية: فهم التغيرات الهرمونية وتأثيرها في وظائف الجسم.</li>
+                <li>التأثيرات الأيضية: التعرّف على التأثيرات المتعلقة بعملية الأيض والتمثيل الغذائي.</li>
+            </ol>
+
+            <h3 style="margin-top: 20px; color: var(--primary);">كيف تسير رحلتك التعليمية؟</h3>
+            <ul style="margin-top: 10px; list-style-type: disc; padding-right: 20px;">
+                <li>تبدأ كل وحدة باختبار قبلي لتقييم معلوماتك السابقة.</li>
+                <li>تشاهد المحتوى التعليمي من خلال الفيديو.</li>
+                <li>تنتقل إلى الاختبار البعدي لقياس مدى اكتسابك للمعلومات.</li>
+                <li>تتابع تقدمك ونتائجك من خلال ملفك التعليمي.</li>
+            </ul>
+            <p style="margin-top: 15px; font-weight: bold; color: var(--success);">
+                🏆 بعد إكمال الوحدات والمتطلبات المحددة، يمكنك الحصول على شهادة إتمام إلكترونية توثّق إنجازك التعليمي.
+            </p>
+        </section>
+
+        <!-- شريط التقدم -->
+        <div class="progress-container" style="margin-bottom: 30px;">
             <div class="progress-info">
                 <span>تقدمك التعليمي</span>
                 <span id="progressText">0%</span>
@@ -31,27 +71,27 @@
             </div>
             <p class="progress-status" id="progressStatus">أكملي 0 من 6 وحدات</p>
         </div>
-    </section>
 
-    <!-- 1. الاستبيان الديموغرافي (يظهر مرة واحدة فقط) -->
-    <div id="surveyContainer" class="content-section" style="max-width: 800px; margin: 20px auto;">
-        <h2>الاستبيان القبلي (المعلومات العامة)</h2>
-        <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة. (لن يتم تصحيحها فورياً، بل ترسل للإدارة).</p>
-        <div id="surveyQuestions"></div>
-        <button class="main-btn" onclick="submitSurvey()" style="margin-top: 20px;">إرسال الاستبيان وفتح الوحدات</button>
-    </div>
+        <!-- الاستبيان الديموغرافي -->
+        <div id="surveyContainer" class="content-section" style="display: none;">
+            <h2>الاستبيان القبلي (المعلومات العامة)</h2>
+            <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة. (لن يتم تصحيحها فورياً، بل ترسل للإدارة).</p>
+            <div id="surveyQuestions"></div>
+            <button class="main-btn" onclick="submitSurvey()" style="margin-top: 20px;">إرسال الاستبيان وفتح الوحدات</button>
+        </div>
 
-    <!-- 2. الوحدات (مخفية حتى يتم إرسال الاستبيان) -->
-    <main class="units-grid" id="unitsGrid" style="display: none;">
-        <!-- يتم توليدها بالجافاسكربت -->
+        <!-- الوحدات -->
+        <main class="units-grid" id="unitsGrid" style="display: none;">
+            <!-- يتم توليدها بالجافاسكربت -->
+        </main>
+
     </main>
 
-    <!-- 🌟 النافذة المنبثقة للاختبار والفيديو -->
+    <!-- 🌟 النافذة المنبثقة -->
     <div id="unitPopup" class="modal-overlay">
         <div class="modal-box">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             
-            <!-- الاختبار القبلي -->
             <div id="preTestSection">
                 <h3 id="preTestTitle">الاختبار القبلي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية. (لن يتم تصحيحها فورياً).</p>
@@ -59,7 +99,6 @@
                 <button class="main-btn" onclick="submitPreTest()">إرسال الإجابات وعرض الفيديو</button>
             </div>
 
-            <!-- الفيديو -->
             <div id="videoSection" style="display: none;">
                 <h3 id="popupTitle">عنوان الوحدة</h3>
                 <div class="video-wrapper">
@@ -68,7 +107,6 @@
                 <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...</div>
             </div>
 
-            <!-- الاختبار البعدي -->
             <div id="postTestSection" style="display: none;">
                 <h3>الاختبار البعدي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس مدى اكتسابك للمعلومات.</p>
@@ -76,7 +114,6 @@
                 <button class="main-btn" onclick="submitPostTest()">إرسال الإجابات</button>
             </div>
 
-            <!-- النتيجة والشهادة -->
             <div id="resultSection" style="display: none; text-align: center;">
                 <h3>النتيجة</h3>
                 <div id="resultText" class="result-text"></div>
