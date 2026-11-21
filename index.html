@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- 🔥 ربط Firebase -->
+    <!-- 🔥 ربط Firebase (الطريقة الجديدة) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCoDLpvPnJ58aL8-pHwHtMBMgRdZY6NVgU",
@@ -24,25 +24,34 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // دالة البحث عن مستخدم في Firebase
-        window.checkUserInFirebase = async function(email) {
-            const usersRef = collection(db, "nurseed_users");
-            const q = query(usersRef, where("email", "==", email));
-            const querySnapshot = await getDocs(q);
-            
-            if (!querySnapshot.empty) {
-                return querySnapshot.docs[0].data(); // إرجاع بيانات المستخدم إذا وجد
+        // دالة البحث عن حساب باستخدام الإيميل كمعرف مباشر
+        window.getUserAccount = async function(email) {
+            try {
+                // تحويل النقطة في الإيميل إلى شرطة سفلية لتجنب مشاكل مسارات Firebase
+                const safeEmail = email.replace(/\./g, '_'); 
+                const docRef = doc(db, "nurseed_accounts", safeEmail);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    return docSnap.data(); // إذا وجد الحساب نرجع بياناته
+                } else {
+                    return null; // إذا لم يوجد
+                }
+            } catch (e) {
+                console.error("خطأ في جلب البيانات: ", e);
+                return null;
             }
-            return null; // إرجاع null إذا لم يوجد
         }
 
-        // دالة حفظ مستخدم جديد في Firebase
-        window.saveUserToFirebase = async function(userData) {
+        // دالة حفظ حساب جديد
+        window.createUserAccount = async function(userData) {
             try {
-                await addDoc(collection(db, "nurseed_users"), userData);
-                console.log("✅ تم حفظ المستخدم في Firebase!");
+                const safeEmail = userData.email.replace(/\./g, '_');
+                const docRef = doc(db, "nurseed_accounts", safeEmail);
+                await setDoc(docRef, userData);
+                console.log("✅ تم حفظ الحساب بنجاح!");
             } catch (error) {
-                console.error("❌ خطأ في حفظ المستخدم: ", error);
+                console.error("❌ خطأ في حفظ الحساب: ", error);
             }
         }
     </script>
@@ -56,42 +65,43 @@
         </div>
         
         <div class="landing-content">
-            <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
+            <h2 id="welcomeTitle">مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <!-- جميع الخانات ظاهرة دائماً -->
-                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
-                
-                <select id="userRoleInput">
-                    <option value="" disabled selected>اختر الصفة الحالية...</option>
-                    <option value="طالب جامعي">طالب جامعي</option>
-                    <option value="طالبة جامعية">طالبة جامعية</option>
-                    <option value="طالب مدرسي">طالب مدرسي</option>
-                    <option value="طالبة مدرسية">طالبة مدرسية</option>
-                    <option value="خريج جامعي">خريج جامعي</option>
-                    <option value="خريجة جامعية">خريجة جامعية</option>
-                    <option value="موظف">موظف</option>
-                    <option value="موظفة">موظفة</option>
-                    <option value="متقاعد">متقاعد</option>
-                    <option value="متقاعدة">متقاعدة</option>
-                    <option value="عمل حر">عمل حر</option>
-                    <option value="باحث أكاديمي">باحث أكاديمي</option>
-                    <option value="باحثة أكاديمية">باحثة أكاديمية</option>
-                    <option value="ربة منزل">ربة منزل</option>
-                    <option value="بدون عمل حالياً">بدون عمل حالياً</option>
-                    <option value="أخرى">أخرى</option>
-                </select>
+                <!-- حقول الاسم والصفة -->
+                <div id="extraFields">
+                    <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
+                    <select id="userRoleInput">
+                        <option value="" disabled selected>اختر الصفة الحالية...</option>
+                        <option value="طالب جامعي">طالب جامعي</option>
+                        <option value="طالبة جامعية">طالبة جامعية</option>
+                        <option value="طالب مدرسي">طالب مدرسي</option>
+                        <option value="طالبة مدرسية">طالبة مدرسية</option>
+                        <option value="خريج جامعي">خريج جامعي</option>
+                        <option value="خريجة جامعية">خريجة جامعية</option>
+                        <option value="موظف">موظف</option>
+                        <option value="موظفة">موظفة</option>
+                        <option value="متقاعد">متقاعد</option>
+                        <option value="متقاعدة">متقاعدة</option>
+                        <option value="عمل حر">عمل حر</option>
+                        <option value="باحث أكاديمي">باحث أكاديمي</option>
+                        <option value="باحثة أكاديمية">باحثة أكاديمية</option>
+                        <option value="ربة منزل">ربة منزل</option>
+                        <option value="بدون عمل حالياً">بدون عمل حالياً</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
 
                 <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
                 <input type="password" id="userPassword" placeholder="كلمة المرور" required>
 
-                <button class="main-btn" onclick="loginOrRegister()">الدخول إلى المنصة</button>
+                <button class="main-btn" onclick="handleLogin()">الدخول إلى المنصة</button>
             </div>
         </div>
     </div>
 
     <script>
-        // عند فتح الصفحة، نقوم بتعبئة البيانات السابقة تلقائياً (إن وجدت) لتسهيل الدخول
+        // عند تحميل الصفحة: نملأ البيانات السابقة (إن وجدت) لتسهيل الدخول
         window.onload = function() {
             const savedName = localStorage.getItem('userFullName');
             const savedRole = localStorage.getItem('userRole');
@@ -102,13 +112,13 @@
             if (savedEmail) document.getElementById('userEmail').value = savedEmail;
         };
 
-        function loginOrRegister() {
+        async function handleLogin() {
             const fullName = document.getElementById('fullNameInput').value.trim();
             const role = document.getElementById('userRoleInput').value;
             const email = document.getElementById('userEmail').value.trim();
             const password = document.getElementById('userPassword').value;
             
-            // التحقق من أن الحقول ليست فارغة
+            // 1. التحقق من صحة المدخلات
             if (email === "" || !email.includes('@')) {
                 alert("الرجاء إدخال بريد إلكتروني صحيح!");
                 return;
@@ -118,62 +128,59 @@
                 return;
             }
 
-            // البحث في Firebase
-            if(window.checkUserInFirebase) {
-                window.checkUserInFirebase(email).then(user => {
-                    
-                    // 1. إذا كان المستخدم موجوداً في Firebase (حساب قديم)
-                    if (user) {
-                        if (user.password !== password) {
-                            alert("كلمة المرور غير صحيحة!");
-                            return;
-                        }
-                        
-                        // تحديث بيانات المتصفح (في حال قام بتغيير الاسم)
-                        localStorage.setItem('userFullName', fullName || user.fullName);
-                        localStorage.setItem('userRole', role || user.role);
-                        localStorage.setItem('currentEmail', email);
-                        
-                        // الدخول إلى الصفحة التالية (مع الاحتفاظ بالتقدم القديم)
-                        window.location.href = "welcome.html";
-                    
-                    // 2. إذا لم يكن موجوداً (حساب جديد)
-                    } else {
-                        // التحقق من إدخال الاسم والصفة للمستخدم الجديد
-                        if (fullName === "" || fullName.split(' ').length < 3) {
-                            alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
-                            return;
-                        }
-                        if (role === "") {
-                            alert("الرجاء اختيار الصفة الحالية!");
-                            return;
-                        }
+            // 2. البحث المباشر عن الحساب في Firebase
+            const existingUser = await window.getUserAccount(email);
 
-                        // حفظ المستخدم الجديد في Firebase
-                        const newUser = { fullName: fullName, role: role, email: email, password: password, date: new Date().toISOString() };
-                        
-                        if(window.saveUserToFirebase) {
-                            window.saveUserToFirebase(newUser);
-                        }
-
-                        // حفظ بيانات المستخدم في المتصفح
-                        localStorage.setItem('userFullName', fullName);
-                        localStorage.setItem('userRole', role);
-                        localStorage.setItem('currentEmail', email);
-                        
-                        // مسح التقدم القديم فقط للمستخدم الجديد
-                        localStorage.removeItem('surveyDone');
-                        localStorage.removeItem('surveyAnswers');
-                        localStorage.removeItem('preTests');
-                        localStorage.removeItem('postTests');
-                        localStorage.removeItem('pmos_completed');
-
-                        alert("تم إنشاء حسابك بنجاح!");
-                        window.location.href = "welcome.html";
-                    }
-                });
+            if (existingUser) {
+                // --- الحالة 1: الحساب موجود بالفعل (مستخدم قديم) ---
+                if (existingUser.password !== password) {
+                    alert("كلمة المرور غير صحيحة!");
+                    return;
+                }
+                
+                // تحديث البيانات في المتصفح والدخول
+                localStorage.setItem('userFullName', existingUser.fullName);
+                localStorage.setItem('userRole', existingUser.role);
+                localStorage.setItem('currentEmail', email);
+                
+                // التوجه للصفحة التالية
+                window.location.href = "welcome.html";
+                
             } else {
-                alert("حدث خطأ في الاتصال بقاعدة البيانات، يرجى تحديث الصفحة.");
+                // --- الحالة 2: الحساب غير موجود (مستخدم جديد) ---
+                if (fullName === "" || fullName.split(' ').length < 3) {
+                    alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
+                    return;
+                }
+                if (role === "") {
+                    alert("الرجاء اختيار الصفة الحالية!");
+                    return;
+                }
+
+                // حفظ الحساب الجديد في Firebase
+                const newUser = { 
+                    fullName: fullName, 
+                    role: role, 
+                    email: email, 
+                    password: password, 
+                    date: new Date().toISOString() 
+                };
+                await window.createUserAccount(newUser);
+
+                // حفظ البيانات في المتصفح
+                localStorage.setItem('userFullName', fullName);
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('currentEmail', email);
+                
+                // تصفير التقدم فقط للمستخدم الجديد
+                localStorage.removeItem('surveyDone');
+                localStorage.removeItem('surveyAnswers');
+                localStorage.removeItem('preTests');
+                localStorage.removeItem('postTests');
+                localStorage.removeItem('pmos_completed');
+
+                alert("تم إنشاء حسابك بنجاح! يمكنك الآن البدء.");
+                window.location.href = "welcome.html";
             }
         }
     </script>
