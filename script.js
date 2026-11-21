@@ -1,4 +1,22 @@
-// --- 1. بيانات الاستبيان الديموغرافي (29 سؤال) ---
+// ==========================================
+// 1. إدارة حسابات المستخدمين (مسح التقدم لحساب جديد)
+// ==========================================
+const currentUser = localStorage.getItem('userFullName');
+const lastUser = localStorage.getItem('lastLoggedUser');
+
+if (currentUser !== lastUser) {
+    // إذا دخل شخص جديد، نمسح كل البيانات القديمة عشان يبدأ من الصفر
+    localStorage.removeItem('surveyDone');
+    localStorage.removeItem('surveyAnswers');
+    localStorage.removeItem('preTests');
+    localStorage.removeItem('postTests');
+    localStorage.removeItem('pmos_completed');
+    localStorage.setItem('lastLoggedUser', currentUser);
+}
+
+// ==========================================
+// 2. بيانات الاستبيان الديموغرافي (29 سؤال)
+// ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
     { q: "2. المستوى التعليمي:", type: "select", options: ["غير متعلم", "إعدادية أو أقل", "دبلوم", "بكالوريوس", "دراسات عليا"] },
@@ -11,8 +29,8 @@ const surveyQuestions = [
     { q: "9. طول الدورة الشهرية:", type: "select", options: ["أقل من 28 يوم", "28–35 يوم", "أكثر من 35 يوم"] },
     { q: "10. هل الدورة الشهرية منتظمة؟", type: "select", options: ["نعم", "كلا"] },
     { q: "11. مدة نزيف الدورة الشهرية:", type: "select", options: ["أقل من 5 أيام", "5–7 أيام", "أكثر من 7 أيام"] },
-    { q: "12. عدد مرات الحمل (إذا وجد):", type: "number" },
-    { q: "13. عدد مرات الإجهاض (إذا وجد):", type: "number" },
+    { q: "12. عدد مرات الحمل:", type: "number" },
+    { q: "13. عدد مرات الإجهاض:", type: "number" },
     { q: "14. هل تستخدمين موانع حمل هرمونية لتنظيم الدورة الشهرية؟", type: "select", options: ["نعم", "لا"] },
     { q: "15. هل تعانين من مشاكل أو تأخر في الحمل؟", type: "select", options: ["نعم", "لا"] },
     { q: "16. هل يوجد تاريخ عائلي للإصابة بمتلازمة تكيس المبايض الأيضي؟", type: "select", options: ["نعم", "لا"] },
@@ -27,9 +45,13 @@ const surveyQuestions = [
     { q: "25. هل تشعرين بوجود دعم نفسي وعاطفي من الأشخاص المحيطين بك؟", type: "select", options: ["نعم", "لا"] }
 ];
 
-// --- 2. بيانات الوحدات (الفيديوهات + اختبار قبلي + اختبار بعدي) ---
+// ==========================================
+// 3. بيانات الوحدات (الفيديوهات + أسئلة قبلي وبعدي)
+// ==========================================
 const unitsData = {
-    1: { title: "المعرفة العامة بمتلازمة تكيس المبايض", videoId: "0rlto-F0NdI",
+    1: { 
+        title: "المعرفة العامة بمتلازمة تكيس المبايض", 
+        videoId: "0rlto-F0NdI",
         preTest: [
             { q: "ما المقصود بمتلازمة تكيس المبايض؟", options: ["حالة صحية ترتبط باضطراب الهرمونات وقد تؤثر في الدورة الشهرية وصحة الجسم", "مرض ينتقل من امرأة إلى أخرى", "مرض يصيب النساء الحوامل فقط", "لا أعرف"], correct: 0 },
             { q: "هل يمكن أن تصاب المرأة بتكيس المبايض حتى لو كان وزنها طبيعياً؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
@@ -43,7 +65,9 @@ const unitsData = {
             { q: "هل يعني تكيس المبايض أن المرأة لن تستطيع الحمل مطلقاً؟", options: ["نعم، لا يمكنها الحمل أبداً", "لا، يمكن لكثير من المصابات الحمل، وقد يحتجن إلى مساعدة طبية أحياناً", "لا أعرف"], correct: 1 }
         ]
     },
-    2: { title: "العلامات والأعراض", videoId: "J1HizKD-MN8",
+    2: { 
+        title: "العلامات والأعراض", 
+        videoId: "J1HizKD-MN8",
         preTest: [
             { q: "أي من الأعراض التالية قد يظهر عند المرأة المصابة بتكيس المبايض؟", options: ["عدم انتظام الدورة الشهرية", "زيادة نمو الشعر في الوجه أو الجسم", "ظهور حب الشباب أو خفة شعر الرأس", "جميع ما سبق"], correct: 3 },
             { q: "أي من الحالات التالية تستدعي مراجعة الطبيبة؟", options: ["تأخر الدورة الشهرية لفترات طويلة أو عدم انتظامها باستمرار", "انتظام الدورة الشهرية بشكل طبيعي", "لا توجد أي حالة تستدعي المراجعة", "لا أعرف"], correct: 0 },
@@ -59,7 +83,9 @@ const unitsData = {
             { q: "هل يمكن أن تسبب اضطرابات الغدة الدرقية أعراضاً تشبه أعراض تكيس المبايض؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 }
         ]
     },
-    3: { title: "التشخيص والفحوصات", videoId: "9HWzoFWjMFk",
+    3: { 
+        title: "التشخيص والفحوصات", 
+        videoId: "9HWzoFWjMFk",
         preTest: [
             { q: "كيف تعرف المرأة إذا كانت مصابة بتكيس المبايض؟", options: ["من خلال الأعراض وحدها دائماً", "بمراجعة الطبيبة لتقييم الأعراض والتاريخ الصحي وإجراء الفحوصات المناسبة", "من خلال الوزن فقط", "لا أعرف"], correct: 1 },
             { q: "ما الأمور التي قد تستخدمها الطبيبة لتقييم تكيس المبايض؟", options: ["السؤال عن الدورة الشهرية والأعراض والتاريخ الصحي", "الفحص السريري وبعض تحاليل الدم", "التصوير بالموجات فوق الصوتية (سونار) عند الحاجة", "جميع ما سبق، حسب حالة المرأة"], correct: 3 },
@@ -73,7 +99,9 @@ const unitsData = {
             { q: "ماذا ينبغي أن تفعل المرأة إذا كانت تعاني من تأخر الدورة باستمرار أو أعراض توحي بتكيس المبايض؟", options: ["تشخّص نفسها من خلال مواقع التواصل الاجتماعي", "تتجاهل الأعراض", "تراجع طبيبة أو مختصاً صحياً لتقييم حالتها", "تستخدم الأدوية من دون استشارة طبية"], correct: 2 }
         ]
     },
-    4: { title: "الرعاية والعلاج", videoId: "slI_o2kv-IU",
+    4: { 
+        title: "الرعاية والعلاج", 
+        videoId: "slI_o2kv-IU",
         preTest: [
             { q: "ما الأمور التي تساعد على دعم صحة المرأة المصابة بتكيس المبايض؟", options: ["تناول طعام متوازن", "ممارسة نشاط بدني مناسب", "النوم الكافي واتباع عادات صحية", "جميع ما سبق"], correct: 3 },
             { q: "هل يوجد علاج واحد يناسب جميع النساء المصابات بتكيس المبايض؟", options: ["نعم، العلاج نفسه يناسب الجميع", "لا، يختلف العلاج حسب الأعراض والحالة الصحية واحتياجات كل امرأة", "لا أعرف"], correct: 1 },
@@ -87,7 +115,9 @@ const unitsData = {
             { q: "لماذا تحتاج المرأة المصابة بتكيس المبايض إلى المتابعة الصحية؟", options: ["لمتابعة الأعراض وصحتها العامة", "لمعرفة ما إذا كانت تحتاج إلى تغيير العلاج أو خطة الرعاية", "لمتابعة المخاطر الصحية المحتملة", "جميع ما سبق"], correct: 3 }
         ]
     },
-    5: { title: "التأثيرات الهرمونية والغدد الصماء", videoId: "6w0TsarkfkY",
+    5: { 
+        title: "التأثيرات الهرمونية والغدد الصماء", 
+        videoId: "6w0TsarkfkY",
         preTest: [
             { q: "هل يمكن أن يؤثر تكيس المبايض في الحالة النفسية للمرأة ونوعية حياتها؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
             { q: "لماذا تعد المتابعة الصحية مهمة للمرأة المصابة بتكيس المبايض؟", options: ["لمتابعة صحة الجسم والهرمونات", "للكشف عن المشكلات الصحية المحتملة مبكراً", "للمساعدة على اختيار الرعاية والعلاج المناسبين", "جميع ما سبق"], correct: 3 },
@@ -107,7 +137,9 @@ const unitsData = {
             { q: "قد يؤدي الخلل الهرموني المصاحب للمتلازمة إلى عدم اكتمال نضج البويضات، مما قد يسبب صعوبات في الخصوبة والإنجاب.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }
         ]
     },
-    6: { title: "المعرفة بالجانب الأيضي", videoId: "Wp2CiybENRo",
+    6: { 
+        title: "المعرفة بالجانب الأيضي", 
+        videoId: "Wp2CiybENRo",
         preTest: [
             { q: "يرتبط تكيس المبايض بمقاومة الإنسولين وزيادة خطر الإصابة بالسكري من النوع الثاني؟", options: ["نعم", "لا", "لا أعرف"], correct: 0 },
             { q: "تُعد مقاومة الإنسولين من العوامل الأيضية الرئيسية المرتبطة بمتلازمة PMOS، إذ تؤثر في قدرة الجسم على استخدام السكر بفاعلية.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 },
@@ -127,8 +159,11 @@ const unitsData = {
 
 let currentUnit = 0;
 let player = null;
+let isReviewing = false;
 
-// --- 3. دوال الاستبيان الديموغرافي ---
+// ==========================================
+// 4. تشغيل الصفحة (Onload)
+// ==========================================
 window.onload = function() {
     const isSurveyDone = localStorage.getItem('surveyDone');
     const surveyContainer = document.getElementById('surveyContainer');
@@ -140,10 +175,25 @@ window.onload = function() {
         renderUnits();
         updateProgress();
     } else {
+        surveyContainer.style.display = 'block';
         renderSurvey();
     }
 };
 
+// ==========================================
+// 5. القائمة الجانبية والوضع الليلي
+// ==========================================
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
+
+// ==========================================
+// 6. دوال الاستبيان
+// ==========================================
 function renderSurvey() {
     const container = document.getElementById('surveyQuestions');
     let html = "";
@@ -166,10 +216,7 @@ function submitSurvey() {
     for(let i=0; i<surveyQuestions.length; i++) {
         answers[`Q${i+1}`] = document.getElementById(`survey_${i}`).value;
     }
-    
-    // هنا سنحفظ البيانات في ذاكرة المتصفح، ولاحقاً سنرسلها لك كمديرة عبر Firebase
     localStorage.setItem('surveyAnswers', JSON.stringify(answers));
-    
     alert("شكراً لك! تم استلام إجاباتك. تظهر الوحدات الآن.");
     localStorage.setItem('surveyDone', 'true');
     document.getElementById('surveyContainer').style.display = 'none';
@@ -178,7 +225,9 @@ function submitSurvey() {
     updateProgress();
 }
 
-// --- 4. دوال الوحدات ---
+// ==========================================
+// 7. دوال الوحدات (التعلم والمراجعة)
+// ==========================================
 function renderUnits() {
     const grid = document.getElementById('unitsGrid');
     let html = "";
@@ -188,37 +237,75 @@ function renderUnits() {
             <div class="unit-card" id="unit-${i}">
                 <div class="card-icon">${i === 1 ? '📖' : i === 2 ? '🔍' : i === 3 ? '🩺' : i === 4 ? '💊' : i === 5 ? '⚖️' : '🧪'}</div>
                 <h3>${unit.title}</h3>
-                <button class="start-btn" onclick="openUnit(${i})">ابدأ التعلم</button>
+                <button class="start-btn" onclick="openUnit(${i}, false)">ابدأ التعلم</button>
             </div>
         `;
     }
     grid.innerHTML = html;
 }
 
-function openUnit(unitId) {
+function openUnit(unitId, reviewMode) {
     currentUnit = unitId;
+    isReviewing = reviewMode;
     const data = unitsData[unitId];
     
-    // تجهيز النافذة
-    document.getElementById('preTestSection').style.display = 'block';
+    document.getElementById('resultSection').style.display = 'none';
+    document.getElementById('preTestSection').style.display = 'none';
     document.getElementById('videoSection').style.display = 'none';
     document.getElementById('postTestSection').style.display = 'none';
-    document.getElementById('resultSection').style.display = 'none';
-    document.getElementById('preTestTitle').innerText = `الاختبار القبلي - ${data.title}`;
-    
-    // توليد أسئلة الاختبار القبلي
-    const preContent = document.getElementById('preQuizContent');
-    let preHtml = "";
-    data.preTest.forEach((q, idx) => {
-        preHtml += `<div class="question-item"><div class="question-text">${idx+1}. ${q.q}</div>`;
-        q.options.forEach((opt, optIdx) => {
-            preHtml += `<label class="option-label"><input type="radio" name="pre_${idx}" value="${optIdx}"> ${opt}</label>`;
+
+    if(isReviewing) {
+        // وضع المراجعة (الوحدة مكتملة)
+        let postData = JSON.parse(localStorage.getItem('postTests')) || {};
+        
+        document.getElementById('videoSection').style.display = 'block';
+        document.getElementById('popupTitle').innerText = `مراجعة: ${data.title}`;
+        document.getElementById('videoStatus').innerText = "✅ لقد أكملت هذه الوحدة مسبقاً. هذه مراجعة فقط.";
+        document.getElementById('videoStatus').style.color = "#4caf50";
+
+        const resultText = document.getElementById('resultText');
+        if(postData[unitId]) {
+            resultText.innerHTML = `<h4>نتيجتك السابقة في هذه الوحدة:</h4><p>${postData[unitId].score} من ${postData[unitId].total}</p>`;
+        }
+        document.getElementById('resultSection').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'none'; 
+
+        startYoutubePlayer(data.videoId);
+    } else {
+        // وضع التعلم الجديد
+        document.getElementById('preTestSection').style.display = 'block';
+        document.getElementById('preTestTitle').innerText = `الاختبار القبلي - ${data.title}`;
+        
+        const preContent = document.getElementById('preQuizContent');
+        let preHtml = "";
+        data.preTest.forEach((q, idx) => {
+            preHtml += `<div class="question-item"><div class="question-text">${idx+1}. ${q.q}</div>`;
+            q.options.forEach((opt, optIdx) => {
+                preHtml += `<label class="option-label"><input type="radio" name="pre_${idx}" value="${optIdx}"> ${opt}</label>`;
+            });
+            preHtml += `</div>`;
         });
-        preHtml += `</div>`;
-    });
-    preContent.innerHTML = preHtml;
+        preContent.innerHTML = preHtml;
+    }
 
     document.getElementById('unitPopup').style.display = 'flex';
+}
+
+function startYoutubePlayer(videoId) {
+    if(player) player.destroy();
+    setTimeout(() => {
+        player = new YT.Player('player', {
+            height: '100%', width: '100%', videoId: videoId,
+            playerVars: { 'autoplay': 1, 'rel': 0 },
+            events: { 'onStateChange': (event) => {
+                if (!isReviewing && event.data === YT.PlayerState.ENDED) {
+                    document.getElementById('videoStatus').innerText = "✅ لقد أكملت مشاهدة الفيديو! تظهر الأسئلة الآن...";
+                    document.getElementById('videoStatus').style.color = "#4caf50";
+                    setTimeout(() => { showPostTest(); }, 1000);
+                }
+            }}
+        });
+    }, 300);
 }
 
 function submitPreTest() {
@@ -234,35 +321,17 @@ function submitPreTest() {
 
     if(!answeredAll) { alert("الرجى الإجابة على جميع الأسئلة."); return; }
 
-    // حفظ الاختبار القبلي محلياً
     let allPre = JSON.parse(localStorage.getItem('preTests')) || {};
     allPre[currentUnit] = preAnswers;
     localStorage.setItem('preTests', JSON.stringify(allPre));
 
-    // الانتقال للفيديو
     document.getElementById('preTestSection').style.display = 'none';
     document.getElementById('videoSection').style.display = 'block';
     document.getElementById('popupTitle').innerText = data.title;
     document.getElementById('videoStatus').innerText = "⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...";
     document.getElementById('videoStatus').style.color = "#e91e63";
 
-    // تشغيل الفيديو
-    if(player) player.destroy();
-    setTimeout(() => {
-        player = new YT.Player('player', {
-            height: '100%', width: '100%', videoId: data.videoId,
-            playerVars: { 'autoplay': 1, 'rel': 0 },
-            events: { 'onStateChange': onPlayerStateChange }
-        });
-    }, 300);
-}
-
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED) {
-        document.getElementById('videoStatus').innerText = "✅ لقد أكملت مشاهدة الفيديو! تظهر الأسئلة الآن...";
-        document.getElementById('videoStatus').style.color = "#4caf50";
-        setTimeout(() => { showPostTest(); }, 1000);
-    }
+    startYoutubePlayer(data.videoId);
 }
 
 function showPostTest() {
@@ -302,12 +371,10 @@ function submitPostTest() {
 
     if(!answeredAll) { alert("الرجى الإجابة على جميع الأسئلة."); return; }
 
-    // حفظ الاختبار البعدي والنتيجة
     let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
     allPost[currentUnit] = { answers: postAnswers, score: score, total: data.postTest.length };
     localStorage.setItem('postTests', JSON.stringify(allPost));
 
-    // عرض النتيجة
     document.getElementById('postTestSection').style.display = 'none';
     document.getElementById('resultSection').style.display = 'block';
 
@@ -322,7 +389,6 @@ function submitPostTest() {
     }
     resultText.innerHTML = msg;
 
-    // تحديث التقدم
     let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
     if (!completed.includes(currentUnit)) {
         completed.push(currentUnit);
@@ -330,7 +396,6 @@ function submitPostTest() {
     }
     updateProgress();
 
-    // زر الانتقال
     const nextBtn = document.getElementById('nextBtn');
     if (currentUnit < 6) {
         nextBtn.style.display = 'block';
@@ -338,14 +403,15 @@ function submitPostTest() {
     } else {
         nextBtn.style.display = 'none';
         resultText.innerHTML += `<h3 style="color:var(--success); margin-top:20px;">🎓 لقد أكملت جميع الوحدات بنجاح!</h3>
-        <button class="main-btn" onclick="showCertificate()" style="margin-top:15px; background:var(--gold); color:#000;">استلام شهادة الإنجاز 🏆</button>`;
+        <p style="margin-top:10px;">تهانينا! يمكنك الآن استلام شهادة الإنجاز الخاصة بك.</p>
+        <button class="main-btn" onclick="showCertificate()" style="margin-top:15px; background:var(--gold); color:#000; font-weight:bold;">استلام شهادة الإنجاز 🏆</button>`;
     }
 }
 
 function nextUnit() {
     if (currentUnit < 6) {
         closePopup();
-        setTimeout(() => { openUnit(currentUnit + 1); }, 500);
+        setTimeout(() => { openUnit(currentUnit + 1, false); }, 500);
     }
 }
 
@@ -362,12 +428,13 @@ function updateProgress() {
         const btn = card.querySelector('.start-btn');
         if(completed.includes(i)) {
             card.classList.add('completed');
-            btn.innerText = "مكتملة ✅";
-            btn.style.pointerEvents = "none";
+            btn.innerText = "مراجعة الوحدة 📖";
+            btn.style.pointerEvents = "auto";
+            btn.onclick = () => openUnit(i, true); // فتح وضع المراجعة
         } else {
             card.classList.remove('completed');
             btn.innerText = "ابدأ التعلم";
-            btn.style.pointerEvents = "auto";
+            btn.onclick = () => openUnit(i, false); // فتح وضع التعلم
         }
     }
     const percent = Math.round((completed.length / 6) * 100);
@@ -376,12 +443,13 @@ function updateProgress() {
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
 }
 
-// --- 5. الشهادة ---
+// ==========================================
+// 8. الشهادة
+// ==========================================
 function showCertificate() {
     const name = localStorage.getItem('userFullName') || "طالب";
     const role = localStorage.getItem('userRole') || "متعلم";
     
-    // حساب المعدل التقريبي
     let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
     let totalScore = 0; let totalQuestions = 0;
     for(let i=1; i<=6; i++) {
@@ -412,4 +480,4 @@ function showCertificate() {
         </div>
         <p style="margin-top:20px; font-size:0.9em; color:#666;">تم حفظ النتيجة في ملفك. (لاحقاً سيتم إرسالها تلقائياً للمدير)</p>
     `;
-      }
+    }
