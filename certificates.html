@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- مكتبة تحويل الشهادة إلى صورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         .certificate-container {
             background: #fff;
@@ -24,14 +27,28 @@
         .cert-title { font-size: 2.5em; color: #333; margin: 20px 0; }
         .cert-name { font-size: 2em; color: var(--gold); font-weight: bold; margin: 20px 0; border-bottom: 2px dashed #ccc; display: inline-block; padding-bottom: 5px; }
         .cert-text { font-size: 1.2em; color: #555; line-height: 1.8; }
-        .cert-result { font-size: 1.5em; color: var(--success); font-weight: bold; margin: 15px 0; background: #e8f5e9; padding: 10px; border-radius: 10px; display: inline-block; }
-        .cert-footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #777; }
+        
+        /* تصميم نتيجة الشهادة */
+        .cert-result { 
+            font-size: 1.5em; 
+            color: #2e7d32; 
+            font-weight: bold; 
+            margin: 20px auto; 
+            background: #e8f5e9; 
+            padding: 15px 30px; 
+            border-radius: 50px; 
+            display: inline-block;
+            border: 2px dashed #2e7d32;
+        }
+        
+        .cert-footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
         .cert-link { color: var(--primary); text-decoration: none; font-weight: bold; }
-        .actions { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;}
-        .actions button { width: auto; padding: 10px 30px; cursor: pointer; border: none; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1.1em; transition: 0.3s; }
+        
+        .actions { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 40px;}
+        .actions button { width: auto; padding: 12px 30px; cursor: pointer; border: none; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1.1em; transition: 0.3s; display: flex; align-items: center; gap: 10px;}
         .btn-download { background: var(--success); color: white; }
         .btn-share { background: var(--primary); color: white; }
-        .btn-download:hover, .btn-share:hover { opacity: 0.8; }
+        .btn-download:hover, .btn-share:hover { opacity: 0.8; transform: translateY(-3px); }
     </style>
 </head>
 <body class="dashboard-body">
@@ -54,15 +71,17 @@
     </aside>
 
     <main class="main-content">
+        <!-- منطقة الشهادة التي سيتم تحويلها لصورة -->
         <div id="certificateArea" class="certificate-container">
             <div class="cert-logo">NURSEED</div>
             <div class="cert-title">شهادة إنجاز</div>
             <p class="cert-text">تُمنح هذه الشهادة إلى</p>
             
-            <div class="cert-name" id="studentName">اسم الطالب</div>
+            <div class="cert-name" id="studentName">جاري التحميل...</div>
             
             <p class="cert-text">وذلك لإتمامه بنجاح جميع وحدات المسار التعليمي لمتلازمة تكيس المبايض الأيضي على منصة NURSEED.</p>
             
+            <!-- عرض النتيجة النهائية -->
             <div class="cert-result" id="studentScore">النتيجة النهائية: 0 / 0</div>
             
             <div class="cert-footer">
@@ -77,6 +96,7 @@
             </div>
         </div>
 
+        <!-- أزرار التحميل والمشاركة -->
         <div class="actions">
             <button class="btn-download" onclick="downloadCertificate()"><i class="fas fa-download"></i> تحميل الشهادة كصورة</button>
             <button class="btn-share" onclick="shareCertificate()"><i class="fas fa-share-alt"></i> مشاركة الشهادة</button>
@@ -90,6 +110,7 @@
             const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
             const postTests = JSON.parse(localStorage.getItem('postTests')) || {};
 
+            // التحقق من إكمال الوحدات
             if (completed.length < 6) {
                 alert("عذراً، يجب عليك إكمال جميع الوحدات الستة أولاً للحصول على الشهادة النهائية.");
                 window.location.href = "pmos.html";
@@ -104,6 +125,7 @@
                 return;
             }
 
+            // حساب النتيجة النهائية (مجموع درجات الاختبارات البعدية)
             let totalScore = 0;
             let totalQuestions = 0;
             
@@ -115,29 +137,46 @@
             }
             document.getElementById('studentScore').innerText = `النتيجة النهائية: ${totalScore} من ${totalQuestions}`;
 
+            // إضافة التاريخ الحالي
             const today = new Date();
             const dateStr = today.getFullYear() + "/" + (today.getMonth()+1) + "/" + today.getDate();
             document.getElementById('certDate').innerText = dateStr;
         }
 
+        // دالة تحميل الشهادة كصورة
         function downloadCertificate() {
             const certElement = document.getElementById('certificateArea');
-            html2canvas(certElement, { scale: 2 }).then(canvas => {
+            
+            html2canvas(certElement, { 
+                scale: 2, 
+                backgroundColor: "#ffffff",
+                useCORS: true 
+            }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'NURSEED_Certificate.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+            }).catch(err => {
+                alert("حدث خطأ أثناء تحميل الشهادة. يرجى المحاولة مرة أخرى.");
+                console.error(err);
             });
         }
 
+        // دالة مشاركة الشهادة
         function shareCertificate() {
             const name = localStorage.getItem('userFullName');
             const platformUrl = "https://ag386-lgtm.github.io/NURSEED/";
             const shareText = `أنا ${name}، أتممت بنجاح المسار التعليمي لمتلازمة تكيس المبايض الأيضي على منصة NURSEED! 🎓\nيمكنكم زيارة المنصة عبر الرابط:`;
             
             if (navigator.share) {
-                navigator.share({ title: 'شهادة إنجاز من NURSEED', text: shareText, url: platformUrl }).catch(console.error);
+                // مشاركة عبر تطبيقات الهاتف
+                navigator.share({
+                    title: 'شهادة إنجاز من NURSEED',
+                    text: shareText,
+                    url: platformUrl
+                }).catch(console.error);
             } else {
+                // نسخ النص في حال عدم توفر ميزة المشاركة
                 navigator.clipboard.writeText(shareText + " " + platformUrl);
                 alert("تم نسخ تفاصيل الشهادة ورابط المنصة بنجاح! يمكنك لصقها في أي مكان.");
             }
