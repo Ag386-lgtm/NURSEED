@@ -11,10 +11,8 @@
 </head>
 <body class="dashboard-body">
 
-    <!-- زر إظهار/إخفاء الشريط الجانبي (للموبايل) -->
     <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-    <!-- القائمة الجانبية -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
             <h2>NURSEED</h2>
@@ -23,45 +21,36 @@
         <nav class="sidebar-nav">
             <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
             <a href="pmos.html" class="active"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
-            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر (الوضع الليلي)</a>
+            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر</a>
+            <a href="results.html"><i class="fas fa-chart-bar"></i> نتائجي</a>
+            <a href="certificates.html"><i class="fas fa-certificate"></i> شهاداتي</a>
             <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
         </nav>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <main class="main-content">
         
-        <!-- الفقرات التعريفية بالقسم -->
-        <section class="content-section">
-            <h2>متلازمة تكيس المبايض (PCOS)</h2>
-            <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
-            <p>يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم متلازمة تكيس المبايض، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها، بالإضافة إلى فهم تأثيراتها الهرمونية والأيضية في جسم المرأة.</p>
-            <p>يتكوّن هذا القسم من ست وحدات تعليمية مترابطة، صُمّمت لتقديم المعلومات بصورة منظمة وتفاعلية، من خلال الفيديوهات التعليمية والاختبارات الإلكترونية.</p>
-            
-            <h3 style="margin-top: 20px; color: var(--primary);">ماذا ستتعلم في هذا القسم؟</h3>
-            <ol style="margin-top: 10px;">
-                <li>المعرفة العامة بمتلازمة تكيس المبايض: فهم مفهوم المتلازمة وطبيعتها والعوامل المرتبطة بها.</li>
-                <li>العلامات والأعراض: التعرّف على أبرز العلامات والأعراض المصاحبة للمتلازمة.</li>
-                <li>التشخيص والفحوصات: معرفة الأساليب والفحوصات المستخدمة في تشخيص الحالة.</li>
-                <li>الرعاية والعلاج: التعرّف على أساليب الرعاية والتدبير العلاجي.</li>
-                <li>التأثيرات الهرمونية: فهم التغيرات الهرمونية وتأثيرها في وظائف الجسم.</li>
-                <li>التأثيرات الأيضية: التعرّف على التأثيرات المتعلقة بعملية الأيض والتمثيل الغذائي.</li>
-            </ol>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <h1 style="color: var(--primary);">قسم تكيس المبايض (PCOS)</h1>
+            <!-- ميزة مشاركة رابط القسم -->
+            <button class="main-btn" style="width: auto; padding: 10px 20px; font-size: 1em;" onclick="shareLink('pmos.html', 'قسم تكيس المبايض')">
+                <i class="fas fa-share-alt"></i> مشاركة رابط القسم
+            </button>
+        </div>
 
-            <h3 style="margin-top: 20px; color: var(--primary);">كيف تسير رحلتك التعليمية؟</h3>
-            <ul style="margin-top: 10px; list-style-type: disc; padding-right: 20px;">
-                <li>تبدأ كل وحدة باختبار قبلي لتقييم معلوماتك السابقة.</li>
-                <li>تشاهد المحتوى التعليمي من خلال الفيديو.</li>
-                <li>تنتقل إلى الاختبار البعدي لقياس مدى اكتسابك للمعلومات.</li>
-                <li>تتابع تقدمك ونتائجك من خلال ملفك التعليمي.</li>
-            </ul>
-            <p style="margin-top: 15px; font-weight: bold; color: var(--success); background: #e8f5e9; padding: 15px; border-radius: 10px;">
-                🏆 ملاحظة هامة: بعد إكمال جميع الوحدات والمتطلبات المحددة، يمكنك الحصول على شهادة إتمام إلكترونية توثّق إنجازك التعليمي، ويمكنك مشاركتها مع الآخرين.
-            </p>
+        <section class="content-section">
+            <h2>متلازمة تكيس المبايض</h2>
+            <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
+            <p>يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم متلازمة تكيس المبايض، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها.</p>
+            <p>يتكوّن هذا القسم من ست وحدات تعليمية مترابطة، صُمّمت لتقديم المعلومات بصورة منظمة وتفاعلية.</p>
+            
+            <div class="alert-box">
+                🏆 <strong>تنبيه هام:</strong> عند إكمالك لجميع الوحدات الستة، ستحصل على <strong>شهادة إنجاز إلكترونية</strong> توثق إنجازك التعليمي ويمكنك مشاركتها مع الآخرين. 
+                <button class="main-btn" style="width: auto; padding: 5px 15px; font-size: 0.9em; margin-top: 10px; background: var(--success);" onclick="agreeCertificate()">موافق، فهمت</button>
+            </div>
         </section>
 
-        <!-- شريط التقدم -->
-        <div class="progress-container" style="margin-bottom: 30px;">
+        <div class="progress-container">
             <div class="progress-info">
                 <span>تقدمك التعليمي</span>
                 <span id="progressText">0%</span>
@@ -72,44 +61,43 @@
             <p class="progress-status" id="progressStatus">أكملي 0 من 6 وحدات</p>
         </div>
 
-        <!-- الاستبيان الديموغرافي (يظهر مرة واحدة) -->
+        <!-- الاستبيان الديموغرافي -->
         <div id="surveyContainer" class="content-section" style="display: none;">
             <h2>الاستبيان القبلي (المعلومات العامة)</h2>
-            <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة. (لن يتم تصحيحها فورياً، بل ترسل للإدارة).</p>
+            <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة.</p>
             <div id="surveyQuestions"></div>
             <button class="main-btn" onclick="submitSurvey()" style="margin-top: 20px;">إرسال الاستبيان وفتح الوحدات</button>
         </div>
 
-        <!-- شبكة الوحدات -->
         <main class="units-grid" id="unitsGrid" style="display: none;">
-            <!-- يتم توليد الوحدات هنا تلقائياً عبر الجافاسكريبت -->
+            <!-- الوحدات -->
         </main>
 
     </main>
 
-    <!-- 🌟 النافذة المنبثقة (الفيديو والاختبارات) -->
+    <!-- النافذة المنبثقة للاختبار والفيديو -->
     <div id="unitPopup" class="modal-overlay">
         <div class="modal-box">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             
-            <!-- 1. الاختبار القبلي -->
             <div id="preTestSection">
                 <h3 id="preTestTitle">الاختبار القبلي</h3>
-                <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية. (لن يتم تصحيحها فورياً).</p>
+                <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية.</p>
                 <div id="preQuizContent"></div>
                 <button class="main-btn" onclick="submitPreTest()">إرسال الإجابات وعرض الفيديو</button>
             </div>
 
-            <!-- 2. الفيديو -->
             <div id="videoSection" style="display: none;">
                 <h3 id="popupTitle">عنوان الوحدة</h3>
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                    <button class="main-btn" style="width: auto; padding: 5px 15px; font-size: 0.8em; background: #607d8b;" onclick="shareLink('pmos.html', 'وحدة تعليمية')"><i class="fas fa-share-alt"></i> مشاركة الوحدة</button>
+                </div>
                 <div class="video-wrapper">
                     <div id="player"></div>
                 </div>
                 <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...</div>
             </div>
 
-            <!-- 3. الاختبار البعدي -->
             <div id="postTestSection" style="display: none;">
                 <h3>الاختبار البعدي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس مدى اكتسابك للمعلومات.</p>
@@ -117,7 +105,6 @@
                 <button class="main-btn" onclick="submitPostTest()">إرسال الإجابات</button>
             </div>
 
-            <!-- 4. النتيجة والشهادة -->
             <div id="resultSection" style="display: none; text-align: center;">
                 <h3>النتيجة</h3>
                 <div id="resultText" class="result-text"></div>
