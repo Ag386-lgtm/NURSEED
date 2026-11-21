@@ -26,17 +26,17 @@
 
         // دالة البحث عن مستخدم في Firebase
         window.checkUserInFirebase = async function(email) {
-            const usersRef = collection(db, "nurseed_users"); // مجموعة خاصة بالمستخدمين
+            const usersRef = collection(db, "nurseed_users");
             const q = query(usersRef, where("email", "==", email));
             const querySnapshot = await getDocs(q);
             
             if (!querySnapshot.empty) {
-                return querySnapshot.docs[0].data(); // إرجاع بيانات المستخدم إذا وجد
+                return querySnapshot.docs[0].data();
             }
-            return null; // إرجاع null إذا لم يوجد
+            return null;
         }
 
-        // دالة حفظ مستخدم جديد في Firebase
+        // دالة حفظ مستخدم جديد
         window.saveUserToFirebase = async function(userData) {
             try {
                 await addDoc(collection(db, "nurseed_users"), userData);
@@ -59,6 +59,7 @@
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
+                <!-- أبقينا الحقول ظاهرة دائماً لتجنب مشكلة اختفاء الاسم -->
                 <div id="newUserFields">
                     <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
                     <select id="userRoleInput">
@@ -91,16 +92,9 @@
     </div>
 
     <script>
-        // عند تحميل الصفحة، التحقق إذا كان المستخدم قد سجل سابقاً لتسهيل الدخول
+        // إزالة كود إخفاء الحقول عند التحميل لمنع الخطأ
         window.onload = function() {
-            const savedEmail = localStorage.getItem('currentEmail');
-            if (savedEmail) {
-                document.getElementById('newUserFields').style.display = 'none'; // إخفاء حقول الاسم
-                document.getElementById('userEmail').value = savedEmail;
-                document.getElementById('userEmail').readOnly = true;
-                document.getElementById('userPassword').focus();
-                document.querySelector('h2').innerText = "مرحباً بعودتك! يرجى إدخال كلمة المرور.";
-            }
+            // لا نقوم بإخفاء أي حقول، لكي يتمكن المستخدم من كتابتها إذا لزم الأمر
         };
 
         function loginOrRegister() {
@@ -118,24 +112,23 @@
                 return;
             }
 
-            // البحث في Firebase إذا كان الإيميل موجوداً
+            // البحث في Firebase
             if(window.checkUserInFirebase) {
                 window.checkUserInFirebase(email).then(user => {
                     if (user) {
-                        // المستخدم موجود (حساب قديم)
+                        // المستخدم موجود في Firebase (حساب قديم)
                         if (user.password !== password) {
                             alert("كلمة المرور غير صحيحة!");
                             return;
                         }
-                        // تسجيل الدخول
                         localStorage.setItem('userFullName', user.fullName);
                         localStorage.setItem('userRole', user.role);
                         localStorage.setItem('currentEmail', email);
                         window.location.href = "welcome.html";
                     } else {
-                        // مستخدم جديد
+                        // مستخدم جديد (لم نجده في Firebase)
                         if (fullName === "" || fullName.split(' ').length < 3) {
-                            alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
+                            alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
                             return;
                         }
                         if (role === "") {
@@ -154,7 +147,7 @@
                         localStorage.setItem('userRole', role);
                         localStorage.setItem('currentEmail', email);
                         
-                        // تصفير التقدم للمستخدم الجديد فقط
+                        // تصفير التقدم
                         localStorage.removeItem('surveyDone');
                         localStorage.removeItem('surveyAnswers');
                         localStorage.removeItem('preTests');
