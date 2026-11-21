@@ -26,7 +26,7 @@
 
         // دالة البحث عن مستخدم في Firebase
         window.checkUserInFirebase = async function(email) {
-            const usersRef = collection(db, "nurseed_users");
+            const usersRef = collection(db, "nurseed_users"); // مجموعة خاصة بالمستخدمين
             const q = query(usersRef, where("email", "==", email));
             const querySnapshot = await getDocs(q);
             
@@ -91,6 +91,18 @@
     </div>
 
     <script>
+        // عند تحميل الصفحة، التحقق إذا كان المستخدم قد سجل سابقاً لتسهيل الدخول
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('currentEmail');
+            if (savedEmail) {
+                document.getElementById('newUserFields').style.display = 'none'; // إخفاء حقول الاسم
+                document.getElementById('userEmail').value = savedEmail;
+                document.getElementById('userEmail').readOnly = true;
+                document.getElementById('userPassword').focus();
+                document.querySelector('h2').innerText = "مرحباً بعودتك! يرجى إدخال كلمة المرور.";
+            }
+        };
+
         function loginOrRegister() {
             const fullName = document.getElementById('fullNameInput').value.trim();
             const role = document.getElementById('userRoleInput').value;
@@ -106,11 +118,11 @@
                 return;
             }
 
-            // 1. البحث عن المستخدم في Firebase
+            // البحث في Firebase إذا كان الإيميل موجوداً
             if(window.checkUserInFirebase) {
                 window.checkUserInFirebase(email).then(user => {
                     if (user) {
-                        // المستخدم موجود
+                        // المستخدم موجود (حساب قديم)
                         if (user.password !== password) {
                             alert("كلمة المرور غير صحيحة!");
                             return;
@@ -119,8 +131,6 @@
                         localStorage.setItem('userFullName', user.fullName);
                         localStorage.setItem('userRole', user.role);
                         localStorage.setItem('currentEmail', email);
-                        
-                        // إذا كان لديه تقدم سابق في قاعدة البيانات، يمكن استعادته هنا (اختياري)
                         window.location.href = "welcome.html";
                     } else {
                         // مستخدم جديد
@@ -144,7 +154,7 @@
                         localStorage.setItem('userRole', role);
                         localStorage.setItem('currentEmail', email);
                         
-                        // تصفير التقدم للمستخدم الجديد
+                        // تصفير التقدم للمستخدم الجديد فقط
                         localStorage.removeItem('surveyDone');
                         localStorage.removeItem('surveyAnswers');
                         localStorage.removeItem('preTests');
