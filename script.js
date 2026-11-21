@@ -1,13 +1,14 @@
-// 1. إدارة الحساب
-const currentUser = localStorage.getItem('userFullName');
-const lastUser = localStorage.getItem('lastLoggedUser');
-if (currentUser !== lastUser && currentUser) {
+// 1. إدارة الحساب بناءً على الإيميل
+const currentUserEmail = localStorage.getItem('userEmail');
+const lastUserEmail = localStorage.getItem('lastLoggedUserEmail');
+
+if (currentUserEmail !== lastUserEmail && currentUserEmail) {
     localStorage.removeItem('surveyDone'); localStorage.removeItem('surveyAnswers');
     localStorage.removeItem('preTests'); localStorage.removeItem('postTests'); localStorage.removeItem('pmos_completed');
-    localStorage.setItem('lastLoggedUser', currentUser);
+    localStorage.setItem('lastLoggedUserEmail', currentUserEmail);
 }
 
-// 2. البيانات (الاستبيان والوحدات)
+// 2. البيانات
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
     { q: "2. المستوى التعليمي:", type: "select", options: ["غير متعلم", "إعدادية أو أقل", "دبلوم", "بكالوريوس", "دراسات عليا"] },
@@ -137,7 +138,7 @@ let currentUnit = 0;
 let player = null;
 let isReviewing = false;
 
-// 3. تفعيل الأزرار والمشاركة
+// 3. الأزرار والمشاركة
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 function agreeCertificate() { localStorage.setItem('certificateAgreed', 'true'); alert("تم التسجيل! بالتوفيق في رحلتك التعليمية."); }
@@ -203,7 +204,7 @@ function submitSurvey() {
     updateProgress();
 }
 
-// 6. الوحدات والفيديو
+// 6. الوحدات
 function renderUnits() {
     const grid = document.getElementById('unitsGrid');
     let html = "";
@@ -395,4 +396,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-        }
+            }
