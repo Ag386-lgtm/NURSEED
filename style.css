@@ -1,19 +1,17 @@
 :root {
-    /* ألوان المنصة البنفسجية */
     --primary: #6a1b9a; 
     --primary-light: #9c27b0;
     --gold: #d4af37; 
-    --bg-color: #f3e5f5; /* بنفسجي فاتح جداً */
+    --bg-color: #f3e5f5; 
     --text-dark: #333;
     --text-light: #666;
     --white: #ffffff;
     --success: #4caf50;
     --error: #f44336;
     --card-bg: #ffffff;
-    --sidebar-bg: #4a148c; /* بنفسجي غامق للشريط الجانبي */
+    --sidebar-bg: #4a148c; 
 }
 
-/* الوضع الليلي (Dark Mode) */
 body.dark-mode {
     --bg-color: #121212;
     --text-dark: #e0e0e0;
@@ -26,11 +24,74 @@ body.dark-mode {
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
 body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; transition: background-color 0.3s, color 0.3s; }
 
-/* --- لوحة التحكم (Dashboard) --- */
+/* ========================================= */
+/* 1. تنسيق صفحة الدخول (Landing) */
+/* ========================================= */
+.landing-body {
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    /* خلفية متدرجة بنفسجية */
+    background: linear-gradient(135deg, #ede7f6, #e1bee7);
+    padding: 20px;
+}
+.landing-container {
+    background: var(--white); 
+    padding: 50px 40px; 
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(106, 27, 154, 0.15); 
+    text-align: center; 
+    max-width: 450px; 
+    width: 100%;
+}
+.landing-title { font-size: 3.5em; color: var(--primary); font-weight: 800; letter-spacing: 2px; margin-bottom: 5px; }
+.landing-subtitle { color: var(--text-light); font-weight: 600; margin-bottom: 30px; font-size: 0.9em; }
+.landing-content h2 { color: var(--text-dark); margin-bottom: 25px; font-size: 1.3em; }
+
+.login-form { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+.login-form input, .login-form select {
+    width: 100%; 
+    padding: 15px; 
+    border: 2px solid #e1bee7;
+    border-radius: 10px; 
+    font-size: 1.1em; 
+    font-family: 'Cairo', sans-serif;
+    outline: none; 
+    transition: 0.3s; 
+    background: #fafafa;
+    text-align: right; /* محاذاة النص لليمين */
+}
+.login-form input:focus, .login-form select:focus { 
+    border-color: var(--primary); 
+    box-shadow: 0 0 10px rgba(106, 27, 154, 0.1); 
+    background: var(--white); 
+}
+.main-btn {
+    display: inline-block; 
+    padding: 15px 30px; 
+    background: var(--primary); 
+    color: var(--white);
+    text-decoration: none; 
+    border-radius: 10px; 
+    font-size: 1.2em; 
+    font-weight: bold; 
+    border: none; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 5px 15px rgba(106, 27, 154, 0.3); 
+    width: 100%; 
+    margin-top: 10px;
+}
+.main-btn:hover { background: var(--primary-light); transform: translateY(-3px); }
+
+/* ========================================= */
+/* 2. تنسيق لوحة التحكم (Dashboard) */
+/* ========================================= */
 .dashboard-body { display: flex; min-height: 100vh; }
 .sidebar {
     width: 280px; background: var(--sidebar-bg); color: var(--white); padding: 30px 0;
-    display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; transition: 0.3s;
+    display: flex; flex-direction: column; position: fixed; height: 100vh; overflow-y: auto; transition: 0.3s; z-index: 1000;
 }
 .sidebar-logo { text-align: center; padding: 0 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
 .sidebar-logo h2 { color: var(--gold); font-size: 1.8em; letter-spacing: 2px; }
@@ -43,31 +104,23 @@ body { background-color: var(--bg-color); color: var(--text-dark); line-height: 
 .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(255,255,255,0.15); color: var(--white); }
 .sidebar-nav a i { width: 20px; text-align: center; }
 
-.main-content { margin-right: 280px; padding: 40px; flex: 1; transition: 0.3s; }
+.main-content { margin-right: 280px; padding: 40px; flex: 1; transition: 0.3s; width: calc(100% - 280px); }
 
 /* زر إظهار/إخفاء الشريط الجانبي */
 .toggle-sidebar {
     display: none; position: fixed; top: 20px; right: 20px; z-index: 1001;
     background: var(--primary); color: white; border: none; padding: 10px 15px;
-    border-radius: 8px; cursor: pointer; font-size: 1.2em;
+    border-radius: 8px; cursor: pointer; font-size: 1.2em; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* --- المحتوى --- */
+/* ========================================= */
+/* 3. تنسيق المحتوى والوحدات */
+/* ========================================= */
 .content-section { background: var(--card-bg); padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; }
 .content-section h2 { color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 5px; }
 .content-section p, .content-section li { color: var(--text-light); margin-bottom: 10px; font-size: 1.1em; }
 
-/* الأزرار */
-.main-btn, .start-btn {
-    display: inline-block; padding: 12px 30px; background: var(--primary); color: var(--white);
-    text-decoration: none; border-radius: 50px; font-size: 1.1em; font-weight: bold; 
-    border: none; cursor: pointer; transition: all 0.3s ease; 
-    box-shadow: 0 5px 15px rgba(106, 27, 154, 0.3); width: 100%; text-align: center;
-}
-.main-btn:hover, .start-btn:hover { background: var(--primary-light); transform: translateY(-3px); }
-
-/* شبكة الوحدات */
-.units-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+.units-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
 .unit-card {
     background: var(--card-bg); padding: 30px; border-radius: 20px;
     text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.04);
@@ -94,10 +147,21 @@ body.dark-mode .progress-bar-bg { background: #333; }
 .progress-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.5s ease; }
 .progress-status { margin-top: 10px; font-size: 0.9em; color: var(--text-light); }
 
-/* النوافذ المنبثقة */
+/* الأزرار داخل الوحدات */
+.start-btn {
+    display: inline-block; padding: 12px 30px; background: var(--primary); color: var(--white);
+    text-decoration: none; border-radius: 50px; font-size: 1.1em; font-weight: bold; 
+    border: none; cursor: pointer; transition: all 0.3s ease; 
+    box-shadow: 0 5px 15px rgba(106, 27, 154, 0.3); width: 100%; text-align: center;
+}
+.start-btn:hover { background: var(--primary-light); transform: translateY(-3px); }
+
+/* ========================================= */
+/* 4. النوافذ المنبثقة (الفيديو والأسئلة) */
+/* ========================================= */
 .modal-overlay {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
     backdrop-filter: blur(5px); padding: 20px;
 }
 .modal-box {
@@ -139,10 +203,14 @@ body.dark-mode .option-label:hover { background: #333; }
 .certificate .name { font-size: 2em; color: var(--gold); font-weight: bold; text-decoration: underline; margin-bottom: 20px; }
 .certificate .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
 
-/* الشاشات الصغيرة (الموبايل) */
+/* ========================================= */
+/* 5. الشاشات الصغيرة (الموبايل) */
+/* ========================================= */
 @media (max-width: 768px) {
     .sidebar { transform: translateX(100%); }
     .sidebar.active { transform: translateX(0); }
-    .main-content { margin-right: 0; padding: 20px; padding-top: 80px; }
+    .main-content { margin-right: 0; padding: 20px; padding-top: 80px; width: 100%; }
     .toggle-sidebar { display: block; }
+    .landing-container { padding: 30px 20px; }
+    .landing-title { font-size: 2.5em; }
 }
