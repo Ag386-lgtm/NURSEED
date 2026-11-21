@@ -11,7 +11,7 @@
 </head>
 <body class="dashboard-body">
 
-    <!-- زر إظهار/إخفاء الشريط الجانبي للموبايل -->
+    <!-- زر إظهار/إخفاء الشريط الجانبي (للموبايل) -->
     <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
     <!-- القائمة الجانبية -->
@@ -23,7 +23,7 @@
         <nav class="sidebar-nav">
             <a href="welcome.html"><i class="fas fa-home"></i> الرئيسية</a>
             <a href="pmos.html" class="active"><i class="fas fa-graduation-cap"></i> مساري التعليمي</a>
-            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر</a>
+            <a href="#" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> تغيير المظهر (الوضع الليلي)</a>
             <a href="welcome.html#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
         </nav>
     </aside>
@@ -31,7 +31,7 @@
     <!-- المحتوى الرئيسي -->
     <main class="main-content">
         
-        <!-- معلومات القسم التعريفية -->
+        <!-- الفقرات التعريفية بالقسم -->
         <section class="content-section">
             <h2>متلازمة تكيس المبايض (PCOS)</h2>
             <p>مرحباً بك في القسم التعليمي الخاص بمتلازمة تكيس المبايض (PCOS).</p>
@@ -55,8 +55,8 @@
                 <li>تنتقل إلى الاختبار البعدي لقياس مدى اكتسابك للمعلومات.</li>
                 <li>تتابع تقدمك ونتائجك من خلال ملفك التعليمي.</li>
             </ul>
-            <p style="margin-top: 15px; font-weight: bold; color: var(--success);">
-                🏆 بعد إكمال الوحدات والمتطلبات المحددة، يمكنك الحصول على شهادة إتمام إلكترونية توثّق إنجازك التعليمي.
+            <p style="margin-top: 15px; font-weight: bold; color: var(--success); background: #e8f5e9; padding: 15px; border-radius: 10px;">
+                🏆 ملاحظة هامة: بعد إكمال جميع الوحدات والمتطلبات المحددة، يمكنك الحصول على شهادة إتمام إلكترونية توثّق إنجازك التعليمي، ويمكنك مشاركتها مع الآخرين.
             </p>
         </section>
 
@@ -72,7 +72,7 @@
             <p class="progress-status" id="progressStatus">أكملي 0 من 6 وحدات</p>
         </div>
 
-        <!-- الاستبيان الديموغرافي -->
+        <!-- الاستبيان الديموغرافي (يظهر مرة واحدة) -->
         <div id="surveyContainer" class="content-section" style="display: none;">
             <h2>الاستبيان القبلي (المعلومات العامة)</h2>
             <p>يرجى الإجابة على هذه الأسئلة لقياس المعلومات العامة. (لن يتم تصحيحها فورياً، بل ترسل للإدارة).</p>
@@ -80,18 +80,19 @@
             <button class="main-btn" onclick="submitSurvey()" style="margin-top: 20px;">إرسال الاستبيان وفتح الوحدات</button>
         </div>
 
-        <!-- الوحدات -->
+        <!-- شبكة الوحدات -->
         <main class="units-grid" id="unitsGrid" style="display: none;">
-            <!-- يتم توليدها بالجافاسكربت -->
+            <!-- يتم توليد الوحدات هنا تلقائياً عبر الجافاسكريبت -->
         </main>
 
     </main>
 
-    <!-- 🌟 النافذة المنبثقة -->
+    <!-- 🌟 النافذة المنبثقة (الفيديو والاختبارات) -->
     <div id="unitPopup" class="modal-overlay">
         <div class="modal-box">
             <span class="close-btn" onclick="closePopup()">&times;</span>
             
+            <!-- 1. الاختبار القبلي -->
             <div id="preTestSection">
                 <h3 id="preTestTitle">الاختبار القبلي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس معرفتك الحالية. (لن يتم تصحيحها فورياً).</p>
@@ -99,6 +100,7 @@
                 <button class="main-btn" onclick="submitPreTest()">إرسال الإجابات وعرض الفيديو</button>
             </div>
 
+            <!-- 2. الفيديو -->
             <div id="videoSection" style="display: none;">
                 <h3 id="popupTitle">عنوان الوحدة</h3>
                 <div class="video-wrapper">
@@ -107,6 +109,7 @@
                 <div class="video-status" id="videoStatus">⏳ يرجى مشاهدة الفيديو بالكامل لفتح الاختبار البعدي...</div>
             </div>
 
+            <!-- 3. الاختبار البعدي -->
             <div id="postTestSection" style="display: none;">
                 <h3>الاختبار البعدي</h3>
                 <p>يرجى الإجابة على الأسئلة التالية لقياس مدى اكتسابك للمعلومات.</p>
@@ -114,6 +117,7 @@
                 <button class="main-btn" onclick="submitPostTest()">إرسال الإجابات</button>
             </div>
 
+            <!-- 4. النتيجة والشهادة -->
             <div id="resultSection" style="display: none; text-align: center;">
                 <h3>النتيجة</h3>
                 <div id="resultText" class="result-text"></div>
