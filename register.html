@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NURSEED | نظام الحسابات الجديد</title>
+    <link rel="stylesheet" href="style_v2.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 ربط Firebase الجديد -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoDLpvPnJ58aL8-pHwHtMBMgRdZY6NVgU",
+            authDomain: "nurseed-c2aa4.firebaseapp.com",
+            projectId: "nurseed-c2aa4",
+            storageBucket: "nurseed-c2aa4.firebasestorage.app",
+            messagingSenderId: "593899467317",
+            appId: "1:593899467317:web:ee5a1e029f0afeee70b77c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // دالة جلب بيانات المستخدم (تستخدم الإيميل كمعرف)
+        window.getUserData = async function(email) {
+            try {
+                // تحويل النقاط في الإيميل إلى شرطات سفلية لتجنب أخطاء مسارات Firebase
+                const safeEmail = email.replace(/\./g, '_').replace(/@/g, '_at_');
+                const docRef = doc(db, "NURSEED_DATABASE", safeEmail); // اسم المجموعة الجديدة
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    return docSnap.data();
+                } else {
+                    return null;
+                }
+            } catch (e) {
+                console.error("خطأ في جلب البيانات: ", e);
+                return null;
+            }
+        }
+
+        // دالة حفظ بيانات المستخدم الجديد
+        window.saveUserData = async function(userData) {
+            try {
+                const safeEmail = userData.email.replace(/\./g, '_').replace(/@/g, '_at_');
+                const docRef = doc(db, "NURSEED_DATABASE", safeEmail); // اسم المجموعة الجديدة
+                await setDoc(docRef, userData);
+                console.log("✅ تم حفظ البيانات في NURSEED_DATABASE بنجاح!");
+            } catch (error) {
+                console.error("❌ خطأ في حفظ البيانات: ", error);
+            }
+        }
+    </script>
+</head>
+<body class="landing-body">
+
+    <div class="landing-container">
+        <div class="logo-area">
+            <h1 class="landing-title">NURSEED</h1>
+            <p class="landing-subtitle">نظام الحسابات الجديد</p>
+        </div>
+        
+        <div class="landing-content">
+            <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
+            
+            <div class="login-form">
+                <!-- جميع الخانات ظاهرة دائماً -->
+                <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)">
+                
+                <select id="userRoleInput">
+                    <option value="" disabled selected>اختر الصفة الحالية...</option>
+                    <option value="طالب جامعي">طالب جامعي</option>
+                    <option value="طالبة جامعية">طالبة جامعية</option>
+                    <option value="طالب مدرسي">طالب مدرسي</option>
+                    <option value="طالبة مدرسية">طالبة مدرسية</option>
+                    <option value="خريج جامعي">خريج جامعي</option>
+                    <option value="خريجة جامعية">خريجة جامعية</option>
+                    <option value="موظف">موظف</option>
+                    <option value="موظفة">موظفة</option>
+                    <option value="متقاعد">متقاعد</option>
+                    <option value="متقاعدة">متقاعدة</option>
+                    <option value="عمل حر">عمل حر</option>
+                    <option value="باحث أكاديمي">باحث أكاديمي</option>
+                    <option value="باحثة أكاديمية">باحثة أكاديمية</option>
+                    <option value="ربة منزل">ربة منزل</option>
+                    <option value="بدون عمل حالياً">بدون عمل حالياً</option>
+                    <option value="أخرى">أخرى</option>
+                </select>
+
+                <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
+                <input type="password" id="userPassword" placeholder="كلمة المرور" required>
+
+                <button class="main-btn" onclick="handleSubmit()">الدخول / إنشاء حساب</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تعبئة البيانات السابقة تلقائياً (لتسهيل الدخول)
+        window.onload = function() {
+            const savedName = localStorage.getItem('NURSEED_NAME');
+            const savedRole = localStorage.getItem('NURSEED_ROLE');
+            const savedEmail = localStorage.getItem('NURSEED_EMAIL');
+
+            if (savedName) document.getElementById('fullNameInput').value = savedName;
+            if (savedRole) document.getElementById('userRoleInput').value = savedRole;
+            if (savedEmail) document.getElementById('userEmail').value = savedEmail;
+        };
+
+        async function handleSubmit() {
+            const fullName = document.getElementById('fullNameInput').value.trim();
+            const role = document.getElementById('userRoleInput').value;
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value;
+            
+            // 1. التحقق من المدخلات الأساسية
+            if (email === "" || !email.includes('@')) {
+                alert("الرجاء إدخال بريد إلكتروني صحيح!");
+                return;
+            }
+            if (password.length < 4) {
+                alert("كلمة المرور يجب أن تكون 4 أحرف على الأقل!");
+                return;
+            }
+
+            // 2. البحث عن حساب موجود في قاعدة البيانات الجديدة
+            const existingUser = await window.getUserData(email);
+
+            if (existingUser) {
+                // --- مستخدم قديم ---
+                if (existingUser.password !== password) {
+                    alert("كلمة المرور غير صحيحة!");
+                    return;
+                }
+                
+                // حفظ البيانات في المتصفح باسم جديد
+                localStorage.setItem('NURSEED_NAME', existingUser.fullName);
+                localStorage.setItem('NURSEED_ROLE', existingUser.role);
+                localStorage.setItem('NURSEED_EMAIL', email);
+                
+                alert("تم تسجيل الدخول بنجاح!");
+                window.location.href = "welcome.html"; // أو أي صفحة تريدها
+                
+            } else {
+                // --- مستخدم جديد ---
+                if (fullName === "" || fullName.split(' ').length < 3) {
+                    alert("أنت مستخدم جديد. الرجاء إدخال الاسم الثلاثي كاملاً!");
+                    return;
+                }
+                if (role === "") {
+                    alert("الرجاء اختيار الصفة الحالية!");
+                    return;
+                }
+
+                // حفظ الحساب الجديد
+                const newUser = { 
+                    fullName: fullName, 
+                    role: role, 
+                    email: email, 
+                    password: password, 
+                    date: new Date().toISOString() 
+                };
+                await window.saveUserData(newUser);
+
+                // حفظ البيانات في المتصفح
+                localStorage.setItem('NURSEED_NAME', fullName);
+                localStorage.setItem('NURSEED_ROLE', role);
+                localStorage.setItem('NURSEED_EMAIL', email);
+
+                alert("تم إنشاء حسابك الجديد بنجاح!");
+                window.location.href = "welcome.html"; // أو أي صفحة تريدها
+            }
+        }
+    </script>
+</body>
+</html>
