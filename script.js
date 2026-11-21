@@ -268,7 +268,6 @@ function openUnit(unitId, reviewMode) {
 
     if(isReviewing) {
         let postData = JSON.parse(localStorage.getItem('postTests')) || {};
-        let preData = JSON.parse(localStorage.getItem('preTests')) || {};
         
         document.getElementById('videoSection').style.display = 'block';
         document.getElementById('popupTitle').innerText = `مراجعة: ${data.title}`;
@@ -358,9 +357,15 @@ function submitPreTest() {
     allPre[currentUnit] = preAnswers;
     localStorage.setItem('preTests', JSON.stringify(allPre));
     
-    // إرسال الاختبار القبلي لج
     if(window.saveToFirebase) {
-        window.saveToFirebase({ action: "اختبار قبلي", name: localStorage.getItem('userFullName'), email: currentEmail, unit: currentUnit, answers: preAnswers, date: new Date().toISOString() });
+        window.saveToFirebase({ 
+            action: "اختبار قبلي", 
+            name: localStorage.getItem('userFullName'), 
+            email: currentEmail, 
+            unit: currentUnit, 
+            answers: preAnswers, 
+            date: new Date().toISOString() 
+        });
     }
 
     document.getElementById('preTestSection').style.display = 'none';
@@ -408,7 +413,6 @@ function submitPostTest() {
     allPost[currentUnit] = { answers: postAnswers, score: score, total: data.postTest.length };
     localStorage.setItem('postTests', JSON.stringify(allPost));
 
-    // إرسال النتيجة النهائية للوحدة لج
     if(window.saveToFirebase) {
         window.saveToFirebase({ 
             action: "إنهاء وحدة", 
@@ -481,4 +485,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-}
+            }
