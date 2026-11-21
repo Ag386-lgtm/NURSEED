@@ -6,6 +6,34 @@
     <title>NURSEED | تسجيل الدخول</title>
     <link rel="stylesheet" href="style_v2.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- 🔥 ربط Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCoDLpvPnJ58aL8-pHwHtMBMgRdZY6NVgU",
+            authDomain: "nurseed-c2aa4.firebaseapp.com",
+            projectId: "nurseed-c2aa4",
+            storageBucket: "nurseed-c2aa4.firebasestorage.app",
+            messagingSenderId: "593899467317",
+            appId: "1:593899467317:web:ee5a1e029f0afeee70b77c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // دالة لإرسال البيانات لـ Firebase
+        window.saveToFirebase = async function(data) {
+            try {
+                await addDoc(collection(db, "nurseed_data"), data);
+                console.log("تم الحفظ في Firebase بنجاح");
+            } catch (e) {
+                console.error("خطأ في الحفظ: ", e);
+            }
+        }
+    </script>
 </head>
 <body class="landing-body">
 
@@ -19,10 +47,8 @@
             <h2>مرحباً بك، يرجى إكمال بياناتك للبدء</h2>
             
             <div class="login-form">
-                <!-- الخانة الأولى: الاسم الثلاثي -->
                 <input type="text" id="fullNameInput" placeholder="الاسم الثلاثي (الاسم الأول، الأب، الجد)" required>
                 
-                <!-- الخانة الثانية: الصفة -->
                 <select id="userRoleInput">
                     <option value="" disabled selected>اختر الصفة الحالية...</option>
                     <option value="طالب جامعي">طالب جامعي</option>
@@ -43,10 +69,7 @@
                     <option value="أخرى">أخرى</option>
                 </select>
 
-                <!-- الخانة الثالثة: الإيميل -->
                 <input type="email" id="userEmail" placeholder="البريد الإلكتروني" required>
-                
-                <!-- الخانة الرابعة: الباسورد -->
                 <input type="password" id="userPassword" placeholder="كلمة المرور" required>
 
                 <button class="main-btn" onclick="loginOrRegister()">الدخول إلى المنصة</button>
@@ -62,7 +85,7 @@
             const password = document.getElementById('userPassword').value;
 
             if (fullName === "" || fullName.split(' ').length < 3) {
-                alert("الرجاء إدخال الاسم الثلاثي كاملاً (3 مقاطع على الأقل)!");
+                alert("الرجاء إدخال الاسم الثلاثي كاملاً!");
                 return;
             }
             if (role === "") {
@@ -78,33 +101,34 @@
                 return;
             }
 
-            // جلب قائمة المستخدمين المسجلين سابقاً (عشان نعرف إذا الإيميل جديد أو قديم)
             let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
             
-            // إذا الإيميل موجود مسبقاً، نتحقق من الباسورد
             if (registeredUsers[email]) {
                 if (registeredUsers[email].password !== password) {
-                    alert("كلمة المرور غير صحيحة لهذا البريد الإلكتروني!");
+                    alert("كلمة المرور غير صحيحة!");
                     return;
                 }
-                // إذا الإيميل قديم، نستدعي بياناته المحفوظة
                 localStorage.setItem('userFullName', registeredUsers[email].fullName);
                 localStorage.setItem('userRole', registeredUsers[email].role);
             } else {
-                // إذا الإيميل جديد، نسجله ونمسح أي بيانات قديمة في المتصفح (نبدأ من الصفر)
                 registeredUsers[email] = { fullName: fullName, role: role, password: password };
                 localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-                
                 localStorage.setItem('userFullName', fullName);
                 localStorage.setItem('userRole', role);
                 
-                // تصفير كل شيء لهذا المستخدم الجديد
+                // تصفير البيانات القديمة
                 localStorage.removeItem('surveyDone');
                 localStorage.removeItem('surveyAnswers');
                 localStorage.removeItem('preTests');
                 localStorage.removeItem('postTests');
                 localStorage.removeItem('pmos_completed');
-                alert("تم إنشاء حساب جديد بنجاح! أهلاً بك في رحلتك.");
+                
+                // إرسال بيانات التسجيل لج
+                if(window.saveToFirebase) {
+                    window.saveToFirebase({ action: "تسجيل مستخدم جديد", fullName: fullName, role: role, email: email, date: new Date().toISOString() });
+                }
+                
+                alert("تم إنشاء حساب جديد بنجاح!");
             }
 
             localStorage.setItem('currentEmail', email);
