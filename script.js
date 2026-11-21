@@ -1,4 +1,4 @@
-here// ==========================================
+// ==========================================
 // 1. إدارة الحساب
 // ==========================================
 const currentEmail = localStorage.getItem('currentEmail');
@@ -7,7 +7,7 @@ if (!currentEmail) {
 }
 
 // ==========================================
-// 2. البيانات (الاستبيان والوحدات) - معدلة حسب ملفك
+// 2. البيانات (الاستبيان والوحدات) - معدلة
 // ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
@@ -534,4 +534,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-}
+            }
