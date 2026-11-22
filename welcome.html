@@ -4,8 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عن المنصة | NURSEED</title>
+    
+    <!-- 🌟 أيقونة الموقع (Favicon) -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- رابط الـ CSS -->
     <link rel="stylesheet" href="style_v2.css">
+    
+    <!-- خط جوجل -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -117,13 +126,21 @@
     </main>
 
     <script>
+        // التحقق من تسجيل الدخول وعرض الترحيب
         window.onload = function() {
             const name = localStorage.getItem('userFullName');
             const role = localStorage.getItem('userRole');
+            
             if(name && role) {
                 document.getElementById('welcomeText').innerText = `مرحباً، ${role} ${name}`;
             } else {
+                // إذا لم توجد بيانات، العودة لصفحة التسجيل
                 window.location.href = "index.html";
+            }
+
+            // تفعيل الوضع الليلي إذا كان محفوظاً (اختياري)
+            if(localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
             }
         }
     </script>
