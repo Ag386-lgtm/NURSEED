@@ -1,13 +1,26 @@
 // ==========================================
-// 1. إدارة الحساب
+// 1. إدارة الحساب والمزامنة مع Firebase
 // ==========================================
 const currentEmail = localStorage.getItem('currentEmail');
 if (!currentEmail) {
     window.location.href = "index.html"; 
 }
 
+// دالة المزامنة مع Firebase (تحفظ التقدم في السحابة)
+async function syncWithFirebase() {
+    if (!window.updateUserInFirebase) return;
+    const userData = {
+        surveyDone: localStorage.getItem('surveyDone') || 'false',
+        surveyAnswers: JSON.parse(localStorage.getItem('surveyAnswers')) || {},
+        preTests: JSON.parse(localStorage.getItem('preTests')) || {},
+        postTests: JSON.parse(localStorage.getItem('postTests')) || {},
+        pmos_completed: JSON.parse(localStorage.getItem('pmos_completed')) || []
+    };
+    await window.updateUserInFirebase(currentEmail, userData);
+}
+
 // ==========================================
-// 2. البيانات (الاستبيان والوحدات) - معدلة
+// 2. البيانات (الاستبيان والوحدات) - كاملة
 // ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
@@ -213,13 +226,16 @@ function renderSurvey() {
     container.innerHTML = html;
 }
 
-function submitSurvey() {
+async function submitSurvey() {
     let answers = {};
     for(let i=0; i<surveyQuestions.length; i++) {
         answers[`Q${i+1}`] = document.getElementById(`survey_${i}`).value;
     }
     localStorage.setItem('surveyAnswers', JSON.stringify(answers));
+    localStorage.setItem('surveyDone', 'true');
     
+    await syncWithFirebase(); // حفظ في Firebase
+
     if(window.saveToFirebase) {
         window.saveToFirebase({ 
             action: "استبيان ديموغرافي", 
@@ -231,7 +247,6 @@ function submitSurvey() {
     }
 
     alert("شكراً لك! تم استلام إجاباتك. تظهر الوحدات الآن.");
-    localStorage.setItem('surveyDone', 'true');
     document.getElementById('surveyContainer').style.display = 'none';
     document.getElementById('unitsGrid').style.display = 'grid';
     renderUnits();
@@ -335,7 +350,8 @@ function startYoutubePlayer(videoId) {
     setTimeout(() => {
         player = new YT.Player('player', {
             height: '100%', width: '100%', videoId: videoId,
-            playerVars: { 'autoplay': 1, 'rel': 0 },
+            // إضافة خيار إخفاء شريط التقدم وأدوات التحكم
+            playerVars: { 'autoplay': 1, 'rel': 0, 'controls': 0, 'disablekb': 1, 'modestbranding': 1 },
             events: { 'onStateChange': (event) => {
                 if (!isReviewing && event.data === YT.PlayerState.ENDED) {
                     document.getElementById('videoStatus').innerText = "✅ لقد أكملت مشاهدة الفيديو! تظهر الأسئلة الآن...";
@@ -347,7 +363,7 @@ function startYoutubePlayer(videoId) {
     }, 300);
 }
 
-function submitPreTest() {
+async function submitPreTest() {
     const data = unitsData[currentUnit];
     let preAnswers = [];
     let answeredAll = true;
@@ -361,6 +377,8 @@ function submitPreTest() {
     allPre[currentUnit] = preAnswers;
     localStorage.setItem('preTests', JSON.stringify(allPre));
     
+    await syncWithFirebase(); // حفظ في Firebase
+
     if(window.saveToFirebase) {
         window.saveToFirebase({ 
             action: "اختبار قبلي", 
@@ -396,7 +414,7 @@ function showPostTest() {
     postContent.innerHTML = postHtml;
 }
 
-function submitPostTest() {
+async function submitPostTest() {
     const data = unitsData[currentUnit];
     let postAnswers = [];
     let answeredAll = true;
@@ -416,6 +434,14 @@ function submitPostTest() {
     let allPost = JSON.parse(localStorage.getItem('postTests')) || {};
     allPost[currentUnit] = { answers: postAnswers, score: score, total: data.postTest.length };
     localStorage.setItem('postTests', JSON.stringify(allPost));
+
+    let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
+    if (!completed.includes(currentUnit)) {
+        completed.push(currentUnit);
+        localStorage.setItem('pmos_completed', JSON.stringify(completed));
+    }
+
+    await syncWithFirebase(); // حفظ في Firebase
 
     if(window.saveToFirebase) {
         window.saveToFirebase({ 
@@ -439,11 +465,6 @@ function submitPostTest() {
     }
     resultText.innerHTML = msg;
 
-    let completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
-    if (!completed.includes(currentUnit)) {
-        completed.push(currentUnit);
-        localStorage.setItem('pmos_completed', JSON.stringify(completed));
-    }
     updateProgress();
 
     setTimeout(() => {
@@ -534,4 +555,4 @@ function updateProgress() {
     document.getElementById('progressText').innerText = percent + "%";
     document.getElementById('progressFill').style.width = percent + "%";
     document.getElementById('progressStatus').innerText = `أكملي ${completed.length} من 6 وحدات`;
-                }
+                              }
