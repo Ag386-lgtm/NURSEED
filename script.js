@@ -6,7 +6,7 @@ if (!currentEmail) {
     window.location.href = "index.html"; 
 }
 
-// دالة المزامنة مع Firebase (تحفظ التقدم في السحابة)
+// دالة المزامنة مع Firebase
 async function syncWithFirebase() {
     if (!window.updateUserInFirebase) return;
     const userData = {
@@ -14,13 +14,15 @@ async function syncWithFirebase() {
         surveyAnswers: JSON.parse(localStorage.getItem('surveyAnswers')) || {},
         preTests: JSON.parse(localStorage.getItem('preTests')) || {},
         postTests: JSON.parse(localStorage.getItem('postTests')) || {},
-        pmos_completed: JSON.parse(localStorage.getItem('pmos_completed')) || []
+        pmos_completed: JSON.parse(localStorage.getItem('pmos_completed')) || [],
+        attitudeDone: localStorage.getItem('attitudeDone') || 'false',
+        attitudeAnswers: JSON.parse(localStorage.getItem('attitudeAnswers')) || {}
     };
     await window.updateUserInFirebase(currentEmail, userData);
 }
 
 // ==========================================
-// 2. البيانات (الاستبيان والوحدات) - كاملة
+// 2. البيانات
 // ==========================================
 const surveyQuestions = [
     { q: "1. العمر (سنة):", type: "number" },
@@ -59,7 +61,6 @@ const unitsData = {
     6: { title: "المعرفة بالجانب الأيضي", videoId: "Wp2CiybENRo", preTest: [{ q: "هل يرتبط تكيس المبايض بمقاومة الإنسولين؟", options: ["نعم.", "لا.", "لا أعرف."], correct: 0 }, { q: "مقاومة الإنسولين تؤثر في استخدام السكر.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "تراكم الدهون بالبطن مؤشر على خلل أيضي.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "النظام الغذائي والرياضة يحسنان حساسية الإنسولين.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "قصور الغدة الدرقية يزيد مقاومة الإنسولين.", options: ["نعم.", "لا.", "لا أعرف."], correct: 0 }], postTest: [{ q: "هل يرتبط تكيس المبايض بمقاومة الإنسولين؟", options: ["نعم.", "لا.", "لا أعرف."], correct: 0 }, { q: "مقاومة الإنسولين تؤثر في استخدام السكر.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "تراكم الدهون بالبطن مؤشر على خلل أيضي.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "النظام الغذائي والرياضة يحسنان حساسية الإنسولين.", options: ["صحيح", "خطأ", "لا أعرف"], correct: 0 }, { q: "قصور الغدة الدرقية يزيد مقاومة الإنسولين.", options: ["نعم.", "لا.", "لا أعرف."], correct: 0 }] }
 };
 
-// أسئلة الاتجاهات (تظهر فقط بعد الوحدة السادسة)
 const attitudeQuestions = [
     "1. أعتقد أن معرفة المعلومات الصحيحة عن تكيس المبايض مهمة لكل امرأة.",
     "2. أشعر أنني أستطيع التعرف على بعض أعراض تكيس المبايض التي تحتاج إلى مراجعة الطبية.",
@@ -119,7 +120,7 @@ window.onload = function() {
 };
 
 // ==========================================
-// 5. الاستبيان (بدون أسئلة الاتجاهات)
+// 5. الاستبيان
 // ==========================================
 function renderSurvey() {
     const container = document.getElementById('surveyQuestions');
@@ -392,9 +393,6 @@ async function submitPostTest() {
     }
 }
 
-// ==========================================
-// 7. النوافذ المنبثقة
-// ==========================================
 function showCertificatePopup() {
     const completed = JSON.parse(localStorage.getItem('pmos_completed')) || [];
     const postTests = JSON.parse(localStorage.getItem('postTests')) || {};
@@ -466,15 +464,7 @@ async function submitAttitudeTest() {
     localStorage.setItem('attitudeAnswers', JSON.stringify(attitudeAnswers));
     localStorage.setItem('attitudeDone', 'true'); 
     
-    if (!window.updateUserInFirebase) {
-        alert("حدث خطأ في الاتصال، يرجى المحاولة مرة أخرى.");
-        return;
-    }
-
-    await window.updateUserInFirebase(currentEmail, { 
-        attitudeAnswers: attitudeAnswers, 
-        attitudeDone: 'true' 
-    });
+    await syncWithFirebase();
 
     if(window.saveToFirebase) {
         window.saveToFirebase({ 
