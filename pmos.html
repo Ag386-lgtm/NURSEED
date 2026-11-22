@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- 🔥 استدعاء Firebase -->
     <script type="module">
         import { saveToFirebase } from './firebase-config.js';
         window.saveToFirebase = saveToFirebase;
     </script>
 
     <style>
-        /* تنسيق الشعارات */
         .header-logos {
             display: flex;
             justify-content: center;
@@ -29,14 +27,12 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .header-logos img {
-            height: 70px; /* حجم الشعارات */
+            height: 70px;
             width: auto;
             object-fit: contain;
         }
         @media (max-width: 600px) {
-            .header-logos img {
-                height: 50px; /* تصغير الشعارات في الهاتف */
-            }
+            .header-logos img { height: 50px; }
         }
     </style>
 </head>
@@ -60,10 +56,7 @@
     </aside>
 
     <main class="main-content">
-        
-        <!-- قسم الشعارات -->
         <div class="header-logos">
-            <!-- تأكد من تطابق أسماء الصور مع ما رفعته في GitHub -->
             <img src="IMG_20261121_105712_395.jpg" alt="شعار كلية التمريض - جامعة الكوفة">
             <img src="IMG_20261121_105834_869.jpg" alt="شعار جامعة الكوفة">
         </div>
@@ -75,14 +68,12 @@
             </button>
         </div>
 
-        <!-- النصوص الداخلية التي تم تعديلها -->
         <section class="content-section">
             <h2>متلازمة تكيس المبايض الأيضي</h2>
             <p>مرحباً بك في القسم التعليمي الخاص بـ <strong>متلازمة تكيس المبايض الأيضي (PMOS)</strong>.</p>
             <p>تم إعداد هذا المحتوى كجزء من مشروع أكاديمي لطلبة <strong>كلية التمريض - جامعة الكوفة</strong>. يهدف هذا القسم إلى تقديم تجربة تعليمية متكاملة تساعدك على فهم المتلازمة، والتعرّف على طبيعتها وأعراضها وطرق تشخيصها ورعايتها.</p>
             <p>يتكوّن هذا القسم من ست وحدات تعليمية مترابطة، صُمّمت لتقديم المعلومات بصورة منظمة وتفاعلية.</p>
             
-            <!-- التنبيه الخاص بالشهادة -->
             <div class="alert-box">
                 🏆 <strong>تنبيه هام:</strong> عند إكمالك لجميع الوحدات الستة، ستحصل على <strong>شهادة إنجاز إلكترونية</strong> توثق إنجازك التعليمي ويمكنك مشاركتها مع الآخرين. 
                 <button class="main-btn" style="width: auto; padding: 5px 15px; font-size: 0.9em; margin-top: 10px; background: var(--success);" onclick="agreeCertificate()">موافق، فهمت</button>
@@ -108,9 +99,8 @@
         </div>
 
         <main class="units-grid" id="unitsGrid" style="display: none;">
-            <!-- سيتم تعبئة الوحدات هنا عبر الجافاسكريبت -->
+            <!-- سيتم تعبئة الوحدات هنا -->
         </main>
-
     </main>
 
     <div id="unitPopup" class="modal-overlay">
