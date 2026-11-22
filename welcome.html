@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عن المنصة | NURSEED</title>
     
-    <!-- 🌟 أيقونة الموقع (Favicon) -->
     <link rel="icon" type="image/png" href="favicon.png">
-    
-    <!-- رابط الـ CSS -->
     <link rel="stylesheet" href="style_v2.css">
-    
-    <!-- خط جوجل -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <!-- أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* تنسيق إضافي للشعارات */
         .header-logos {
             display: flex;
             justify-content: center;
@@ -31,14 +23,12 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .header-logos img {
-            height: 90px; /* يمكنك تعديل حجم الشعارات من هنا */
+            height: 90px;
             width: auto;
             object-fit: contain;
         }
         @media (max-width: 600px) {
-            .header-logos img {
-                height: 60px; /* تصغير الشعارات في الشاشات الصغيرة */
-            }
+            .header-logos img { height: 60px; }
         }
         .content-section h2 {
             color: var(--primary);
@@ -65,14 +55,14 @@
             <a href="results.html"><i class="fas fa-chart-bar"></i> نتائجي</a>
             <a href="certificates.html"><i class="fas fa-certificate"></i> شهاداتي</a>
             <a href="#contact"><i class="fas fa-envelope"></i> تواصل معنا</a>
+            <!-- زر تسجيل الخروج الجديد -->
+            <a href="#" onclick="logout()" style="color: #ff5252; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
         </nav>
     </aside>
 
     <main class="main-content">
         
-        <!-- قسم الشعارات -->
         <div class="header-logos">
-            <!-- استدعاء الصور بالأسماء التي قمت أنت بحفظها -->
             <img src="IMG_20261121_105712_395.jpg" alt="شعار كلية التمريض - جامعة الكوفة">
             <img src="IMG_20261121_105834_869.jpg" alt="شعار جامعة الكوفة">
         </div>
@@ -134,14 +124,26 @@
             if(name && role) {
                 document.getElementById('welcomeText').innerText = `مرحباً، ${role} ${name}`;
             } else {
-                // إذا لم توجد بيانات، العودة لصفحة التسجيل
                 window.location.href = "index.html";
             }
 
-            // تفعيل الوضع الليلي إذا كان محفوظاً (اختياري)
             if(localStorage.getItem('darkMode') === 'true') {
                 document.body.classList.add('dark-mode');
             }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        function logout() {
+            localStorage.clear(); // يمسح كل شيء (الاسم، الإيميل، التقدم)
+            window.location.href = "index.html"; // يرجع لصفحة الدخول
         }
     </script>
 </body>
